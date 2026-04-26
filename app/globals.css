@@ -1,0 +1,170 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  
+  --color-cyan-500: #06b6d4;
+  --color-cyan-400: #22d3ee;
+}
+
+:root {
+  --bg-color: #050505;
+  --grid-color: #1a1a1a;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: #e5e5e5;
+  -webkit-font-smoothing: antialiased;
+  selection-background-color: #ffffff;
+  selection-color: #000000;
+}
+
+/* Street Culture Glitch Texture */
+.glitch-grain {
+  position: relative;
+}
+
+.glitch-grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('https://www.transparenttextures.com/patterns/p6.png');
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #333;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Typography Enhancements */
+.tracking-ultra-wide {
+  letter-spacing: 0.5em;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+/* Custom Animations for Preloader */
+@keyframes pulse-cyan {
+  0% { box-shadow: 0 0 10px rgba(6,182,212,0.4); }
+  50% { box-shadow: 0 0 25px rgba(6,182,212,0.8); }
+  100% { box-shadow: 0 0 10px rgba(6,182,212,0.4); }
+}
+
+.animate-pulse-cyan {
+  animation: pulse-cyan 2s infinite;
+}
+
+/* Light Mode Logic: High-Tech Inversion */
+html.light-mode {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Prevent double inversion for images, videos, and specific colored elements to keep them looking natural */
+html.light-mode img, 
+html.light-mode video,
+html.light-mode .preserve-color {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* Ensure smooth transition between modes */
+html {
+  transition: filter 0.3s ease-in-out;
+}
+
+/* Background Grid Pattern */
+.bg-grid {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 20s linear infinite;
+}
+
+@keyframes scan {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  animation: scan 4s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.glitch-hover:hover {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+  color: white;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 10s linear infinite;
+}
+
+@keyframes bar-grow {
+  0%, 100% { height: 20%; }
+  50% { height: 100%; }
+}
+
+.animate-bar {
+  animation: bar-grow 0.5s ease-in-out infinite;
+}
+

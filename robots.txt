@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Sitemap: https://velocity-audio.ai/sitemap.xml
+
+# AI Scrapers - Optimize for Indexing
+User-agent: GPTBot
+Allow: /blog/
+Allow: /showcase/
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
