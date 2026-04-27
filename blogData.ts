@@ -174,7 +174,7 @@ export const BLOG_POSTS: BlogPost[] = [
   {
     id: "hipdut-artist-001",
     slug: "tenxi-naykilla-jemsii-the-trio-that-opened-the-door",
-    category: "Culture",
+    category: "culture",
     featured: true,
     publishedAt: "2026-04-25",
     date: "2026.04.25",
@@ -252,7 +252,7 @@ Tenxi, Naykilla, and Jemsii opened the door because they made hipdut legible. Th
   {
     id: "hipdut-track-002",
     slug: "garam-and-madu-was-more-than-a-hit",
-    category: "Scene Radar",
+    category: "scene-radar",
     featured: true,
     publishedAt: "2026-04-24",
     date: "2026.04.24",
@@ -351,7 +351,7 @@ Garam & Madu was not only a song that people replayed. It was a track that organ
   {
     id: "hipdut-artist-003",
     slug: "naykilla-and-the-soft-power-of-recognition",
-    category: "Culture",
+    category: "culture",
     featured: false,
     publishedAt: "2026-04-23",
     date: "2026.04.23",
@@ -433,7 +433,7 @@ Naykilla’s strength is not just being present inside a viral record. Her stren
   {
     id: "hipdut-artist-004",
     slug: "why-tenxi-feels-like-a-scene-shaper",
-    category: "Archive",
+    category: "archive",
     featured: false,
     publishedAt: "2026-04-22",
     date: "2026.04.22",
@@ -511,7 +511,7 @@ Tenxi is not important only because of visibility. He is important because visib
   {
     id: "hipdut-track-005",
     slug: "malu-malu-and-the-second-wave-effect",
-    category: "Scene Radar",
+    category: "scene-radar",
     featured: false,
     publishedAt: "2026-04-21",
     date: "2026.04.21",
@@ -584,7 +584,7 @@ Malu Malu shows why second-wave records matter. They are not just follow-ups. Th
   {
     id: "hipdut-track-006",
     slug: "the-breakout-song-blueprint",
-    category: "Culture",
+    category: "culture",
     featured: false,
     publishedAt: "2026-04-20",
     date: "2026.04.20",
@@ -672,7 +672,7 @@ A good song earns attention. A breakout song creates a map. It tells listeners w
   {
     id: "hipdut-artist-007",
     slug: "artists-dont-just-drop-songs-they-drop-entry-points",
-    category: "Product",
+    category: "product",
     featured: false,
     publishedAt: "2026-04-19",
     date: "2026.04.19",
@@ -758,7 +758,7 @@ Artists should stop thinking only in terms of dropping songs. The better move is
   {
     id: "hipdut-track-008",
     slug: "momentum-songs-are-different-from-hit-songs",
-    category: "Scene Radar",
+    category: "scene-radar",
     featured: false,
     publishedAt: "2026-04-18",
     date: "2026.04.18",
@@ -840,7 +840,7 @@ A hit song is a result. A momentum song is a force. The best records do both: th
   {
     id: "ai-music-marketing-2026",
     slug: "ai-music-marketing-viral-trend-forecasting-guide",
-    category: "Product",
+    category: "product",
     featured: true,
     publishedAt: "2026-04-26",
     date: "2026.04.26",
