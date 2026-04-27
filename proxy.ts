@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const SESSION_COOKIE = 'sv_session';
+const ADMIN_COOKIE   = 'sv_admin';
 const PROTECTED_PATHS = ['/dashboard'];
+const ADMIN_PATHS     = ['/admin'];
 
 /**
  * Verifies the HMAC-SHA256 session token using the Web Crypto API
@@ -52,16 +54,27 @@ async function verifySessionEdge(token: string): Promise<boolean> {
 }
 
 export async function proxy(req: NextRequest) {
-  const isProtected = PROTECTED_PATHS.some(p =>
-    req.nextUrl.pathname.startsWith(p)
-  );
+  const { pathname } = req.nextUrl;
+
+  // ── Admin route protection (sv_admin cookie) ─────────────────────────────
+  const isAdminRoute = ADMIN_PATHS.some(p => pathname.startsWith(p));
+  if (isAdminRoute && pathname !== '/admin/login') {
+    const adminToken = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (!adminToken || !(await verifySessionEdge(adminToken))) {
+      const loginUrl = new URL('/admin/login', req.url);
+      return NextResponse.redirect(loginUrl);
+    }
+    return NextResponse.next();
+  }
+
+  // ── Dashboard / user route protection (sv_session cookie) ────────────────
+  const isProtected = PROTECTED_PATHS.some(p => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
 
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   if (!token || !(await verifySessionEdge(token))) {
     const loginUrl = new URL('/login', req.url);
-    // Preserve the originally requested URL so we can redirect after login
-    loginUrl.searchParams.set('from', req.nextUrl.pathname);
+    loginUrl.searchParams.set('from', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
@@ -69,5 +82,6 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*'],
+  matcher: ['/dashboard/:path*', '/admin/:path*'],
 };
+

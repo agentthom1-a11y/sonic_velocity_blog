@@ -1,0 +1,163 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { initDB } from '@/lib/db';
+import { listPublishedPosts } from '@/lib/cms/posts';
+import { listCategories } from '@/lib/cms/categories';
+import { SITE_CONFIG } from '@/blogData';
+import { ArrowRight, Terminal } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: `Transmissions | ${SITE_CONFIG.brand}`,
+  description: SITE_CONFIG.subtitle,
+  openGraph: {
+    title: `Transmissions | ${SITE_CONFIG.brand}`,
+    description: SITE_CONFIG.subtitle,
+    type: 'website',
+  },
+};
+
+export const revalidate = 60; // ISR: revalidate every 60 seconds
+
+export default function TransmissionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; q?: string }>;
+}) {
+  initDB();
+  const categories = listCategories();
+
+  // Get all published posts — filter is cosmetic on client (or we do it server-side)
+  const allPosts = listPublishedPosts({ limit: 100 });
+  const featured = allPosts.filter(p => p.featured === 1);
+  const latest   = allPosts.filter(p => p.featured !== 1);
+
+  return (
+    <div className="max-w-7xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out]">
+      <Link href="/" className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] mb-12 text-neutral-500 hover:text-white transition-colors">
+        ← Back to Base Console
+      </Link>
+
+      <header className="mb-20">
+        <div className="flex flex-col md:flex-row justify-between items-end gap-12 border-b border-neutral-900 pb-12">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 border border-neutral-800 bg-neutral-900/50 rounded-full mb-6">
+              <Terminal className="w-3 h-3 text-cyan-500" />
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400">
+                Transmissions // {SITE_CONFIG.brand}
+              </span>
+            </div>
+            <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter mb-4 italic">
+              Transmissions
+            </h1>
+            <p className="font-mono text-xs md:text-sm text-neutral-500 uppercase tracking-widest leading-relaxed">
+              {SITE_CONFIG.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Category Filters */}
+        <div className="flex gap-2 overflow-x-auto py-6 border-b border-neutral-900/50">
+          {['All', ...categories.map(c => c.name)].map(cat => (
+            <Link
+              key={cat}
+              href={cat === 'All' ? '/transmissions' : `/transmissions/category/${categories.find(c => c.name === cat)?.slug || cat.toLowerCase()}`}
+              className="px-6 py-2 text-[10px] font-mono uppercase tracking-widest transition-all rounded-sm whitespace-nowrap text-neutral-500 hover:text-white hover:bg-neutral-900"
+            >
+              {cat}
+            </Link>
+          ))}
+        </div>
+      </header>
+
+      {/* Featured Posts */}
+      {featured.length > 0 && (
+        <section className="mb-20">
+          <p className="text-[9px] font-mono text-neutral-700 uppercase tracking-[0.5em] mb-8">
+            ★ Featured Transmissions
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {featured.slice(0, 2).map((post, i) => (
+              <Link
+                key={post.id}
+                href={`/transmissions/${post.slug}`}
+                className={`group border border-neutral-800 bg-neutral-950/30 overflow-hidden hover:border-neutral-600 transition-all ${i === 0 ? 'md:col-span-2' : ''}`}
+              >
+                {post.coverImageUrl && (
+                  <div className={`overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 ${i === 0 ? 'aspect-[21/9]' : 'aspect-[16/10]'}`}>
+                    <img src={post.coverImageUrl} alt={post.coverImageAlt || post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                  </div>
+                )}
+                <div className="p-8">
+                  <div className="flex items-center gap-4 mb-4">
+                    <span className="px-2 py-1 bg-white text-black text-[8px] font-black uppercase tracking-widest">{post.categoryName || 'Uncategorized'}</span>
+                    <span className="text-[9px] font-mono text-neutral-600">{post.publishedAt?.slice(0, 10)}</span>
+                    <span className="text-[8px] font-mono text-neutral-700">★ Featured</span>
+                  </div>
+                  <h2 className={`font-black text-white uppercase tracking-tighter mb-4 group-hover:text-white transition-colors leading-tight ${i === 0 ? 'text-3xl md:text-5xl' : 'text-2xl'}`}>
+                    {post.title}
+                  </h2>
+                  <p className="text-sm text-neutral-500 font-mono leading-relaxed">{post.excerpt}</p>
+                  <div className="flex items-center gap-2 mt-6 text-[10px] font-bold text-white uppercase tracking-widest">
+                    Read Transmission <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Latest Posts Grid */}
+      {latest.length > 0 && (
+        <section>
+          <p className="text-[9px] font-mono text-neutral-700 uppercase tracking-[0.5em] mb-8">
+            Latest Transmissions — {latest.length} signals
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {latest.map(post => (
+              <Link
+                key={post.id}
+                href={`/transmissions/${post.slug}`}
+                className="group flex flex-col h-full border border-neutral-900 bg-neutral-950/20 hover:border-neutral-700 transition-all overflow-hidden"
+              >
+                {post.coverImageUrl && (
+                  <div className="aspect-[16/10] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative">
+                    <img src={post.coverImageUrl} alt={post.coverImageAlt || post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+                    <div className="absolute top-4 left-4">
+                      <span className="px-2 py-1 bg-black/80 backdrop-blur-md border border-neutral-800 text-[8px] font-mono text-white uppercase tracking-widest">
+                        {post.categoryName}
+                      </span>
+                    </div>
+                  </div>
+                )}
+                <div className="p-8 flex-1 flex flex-col">
+                  <div className="flex items-center gap-4 mb-4 text-[9px] font-mono text-neutral-600 uppercase tracking-widest">
+                    <span>{post.publishedAt?.slice(0, 10)}</span>
+                    <span className="w-1 h-px bg-neutral-800" />
+                    <span>{post.authorName || 'Sonic Velocity'}</span>
+                    {post.readingTime && <span className="text-neutral-700">{post.readingTime}</span>}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white uppercase tracking-tight mb-4 group-hover:text-white transition-colors leading-tight">{post.title}</h3>
+                  <p className="text-xs text-neutral-500 font-mono leading-relaxed mb-8 flex-1">{post.excerpt}</p>
+                  <div className="flex items-center justify-between pt-6 border-t border-neutral-900/50 mt-auto">
+                    <span className="text-[8px] font-mono text-neutral-700 uppercase">{post.sourceType === 'ai_agent' ? 'AI' : 'editorial'}</span>
+                    <span className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest group/more">
+                      Read Transmission <ArrowRight className="w-3.5 h-3.5 group-hover/more:translate-x-1 transition-transform" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {allPosts.length === 0 && (
+        <div className="py-40 text-center border border-dashed border-neutral-900">
+          <p className="text-sm font-mono text-neutral-600 uppercase tracking-[0.3em]">No transmissions published yet.</p>
+          <p className="text-[10px] font-mono text-neutral-800 uppercase tracking-widest mt-4">Check back soon or visit /admin to publish content.</p>
+        </div>
+      )}
+    </div>
+  );
+}
