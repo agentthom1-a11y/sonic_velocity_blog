@@ -30,7 +30,10 @@ const Landing: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const router = useRouter();
 
-  const categoryNames = useMemo(() => ['All', ...CATEGORIES.map(c => c.name)], []);
+  const categoryOptions = useMemo(() => [
+    { slug: 'all', name: 'All' },
+    ...CATEGORIES.map(c => ({ slug: c.slug, name: c.name }))
+  ], []);
 
   const trendingPosts = useMemo(() => {
     return [...BLOG_POSTS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 4);
@@ -41,15 +44,14 @@ const Landing: React.FC = () => {
   }, []);
 
   const scenePosts = useMemo(() => {
-    return BLOG_POSTS.filter(p => p.category === 'Scene Radar' || p.tags.includes('Regional')).slice(0, 3);
+    return BLOG_POSTS.filter(p => p.category === 'scene-radar' || p.tags.includes('Regional')).slice(0, 3);
   }, []);
 
-  const filteredPosts = useMemo(() => {
     return BLOG_POSTS.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchesCategory = activeCategory === 'All' || post.category === activeCategory;
+      const matchesCategory = activeCategory === 'all' || post.category === activeCategory;
       return matchesSearch && matchesCategory;
     });
   }, [searchQuery, activeCategory]);
@@ -118,16 +120,16 @@ const Landing: React.FC = () => {
       <section className="relative z-10 border-b border-neutral-900 px-6 py-6 transition-all duration-300">
          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex items-center gap-1 overflow-x-auto no-scrollbar max-w-full py-1 scroll-smooth">
-               {categoryNames.map(cat => (
+               {categoryOptions.map(cat => (
                   <button
-                    key={cat}
-                    onClick={() => setActiveCategory(cat)}
+                    key={cat.slug}
+                    onClick={() => setActiveCategory(cat.slug)}
                     className="relative whitespace-nowrap px-5 py-2 text-[10px] font-mono uppercase tracking-[0.25em] transition-all z-10 group"
                   >
-                    <span className={`relative z-10 ${activeCategory === cat ? 'text-black font-black' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
-                      {cat}
+                    <span className={`relative z-10 ${activeCategory === cat.slug ? 'text-black font-black' : 'text-neutral-500 group-hover:text-neutral-300'}`}>
+                      {cat.name}
                     </span>
-                    {activeCategory === cat && (
+                    {activeCategory === cat.slug && (
                       <motion.div 
                         layoutId="activeCategory"
                         className="absolute inset-0 bg-white rounded-sm z-0"
@@ -154,7 +156,7 @@ const Landing: React.FC = () => {
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-20">
          
          {/* FEATURED TRANSMISSION (Large Hero Layout) */}
-         {activeCategory === 'All' && !searchQuery && featuredPost && (
+         {activeCategory === 'all' && !searchQuery && featuredPost && (
            <Link id="featured" href={`/blog/${featuredPost.slug}`} className="group block cursor-pointer mb-32">
               <div className="relative border border-neutral-900 bg-neutral-950 overflow-hidden">
                  <div className="grid grid-cols-1 lg:grid-cols-2">
@@ -210,7 +212,7 @@ const Landing: React.FC = () => {
          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
             
             {/* LATEST TRANSMISSIONS GRID */}
-            <div className={activeCategory === 'All' && !searchQuery ? 'lg:col-span-8' : 'lg:col-span-12'}>
+            <div className={activeCategory === 'all' && !searchQuery ? 'lg:col-span-8' : 'lg:col-span-12'}>
                <section id="latest" className="space-y-12">
                   <div className="flex items-center justify-between border-b border-neutral-900 pb-4">
                      <h3 className="text-xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
@@ -268,7 +270,7 @@ const Landing: React.FC = () => {
             </div>
 
             {/* SIDEBAR: MOST READ / TRENDS (Active in index view) */}
-            {activeCategory === 'All' && !searchQuery && (
+            {activeCategory === 'all' && !searchQuery && (
               <aside className="lg:col-span-4 space-y-16">
                  {/* Trending Signals / Most Read */}
                  <div className="p-8 border border-neutral-900 bg-neutral-950 shadow-2xl relative group">
@@ -316,7 +318,7 @@ const Landing: React.FC = () => {
                        ))}
                     </div>
                     <button 
-                      onClick={() => setActiveCategory('Scene Radar')}
+                      onClick={() => setActiveCategory('scene-radar')}
                       className="w-full mt-10 py-3 border border-neutral-800 text-[9px] font-mono text-neutral-500 uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all"
                     >
                        Expand Radar Feed
@@ -362,7 +364,7 @@ const Landing: React.FC = () => {
          </div>
 
          {/* CATEGORY RAILS / FEATURED RAILS */}
-         {activeCategory === 'All' && !searchQuery && (
+         {activeCategory === 'all' && !searchQuery && (
            <section className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-24 mt-24 border-t border-neutral-900">
               {CATEGORIES.slice(0, 4).map((category) => {
                 const icons: Record<string, any> = {
@@ -387,7 +389,7 @@ const Landing: React.FC = () => {
                          </p>
                          <button 
                             onClick={() => {
-                              setActiveCategory(category.name);
+                              setActiveCategory(category.slug);
                               window.scrollTo({ top: 0, behavior: 'smooth' });
                             }}
                             className="text-[9px] font-bold text-white uppercase tracking-[0.2em] border-b border-neutral-800 pb-1 hover:border-white transition-colors"
