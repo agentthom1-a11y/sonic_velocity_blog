@@ -47,6 +47,7 @@ const Landing: React.FC = () => {
     return BLOG_POSTS.filter(p => p.category === 'scene-radar' || p.tags.includes('Regional')).slice(0, 3);
   }, []);
 
+  const filteredPosts = useMemo(() => {
     return BLOG_POSTS.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
