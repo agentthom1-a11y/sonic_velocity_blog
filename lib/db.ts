@@ -77,7 +77,8 @@ export function initDB() {
                           CHECK(source_type IN ('manual','ai_agent','import')),
       source_reference    TEXT,
       ai_summary          TEXT,
-      ai_prompt_version   TEXT
+      ai_prompt_version   TEXT,
+      locale              TEXT    NOT NULL DEFAULT 'en'
     );
 
     CREATE INDEX IF NOT EXISTS idx_posts_status ON posts(status);

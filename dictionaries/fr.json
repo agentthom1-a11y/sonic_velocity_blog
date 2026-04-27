@@ -1,0 +1,30 @@
+{
+  "common": {
+    "brand": "Sonic Velocity",
+    "transmissions": "Transmissions",
+    "studio": "Studio",
+    "systems": "Systèmes",
+    "access": "Accès",
+    "login": "Connexion",
+    "getStarted": "Démarrer",
+    "dashboard": "Tableau de bord",
+    "console": "Console",
+    "readMore": "Lire la transmission complète",
+    "search": "RECHERCHER_DANS_L_ARCHIVE...",
+    "trending": "Signaux Tendances",
+    "latest": "Archives Récentes",
+    "newsletter": "Restez Synchronisé",
+    "subscribe": "Rejoindre la Transmission",
+    "emailPlaceholder": "ENTRER L'EMAIL DE L'OPÉRATEUR..."
+  },
+  "home": {
+    "heroTitle1": "SONIC",
+    "heroTitle2": "VELO",
+    "heroTitle3": "CITY",
+    "heroSubtitle": "Faire progresser les systèmes audio neuronaux et l'ingénierie culturelle.",
+    "signalCaptured": "Signal Capturé // {brand} {title}",
+    "operator": "OPÉRATEUR : GEN_Z_SIGNAL",
+    "version": "VERSION : ED_v2.04",
+    "status": "STATUT : DIFFUSION"
+  }
+}

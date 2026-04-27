@@ -3,14 +3,19 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Activity, Menu, ChevronRight, LayoutDashboard } from 'lucide-react';
+import { Activity, Menu, ChevronRight, LayoutDashboard, Globe } from 'lucide-react';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { ViewType } from '../types';
-import Link from 'next/link';
+import { Link } from './Link';
 import { usePathname } from 'next/navigation';
 import { useAppContext } from './AppContext';
 import { SITE_CONFIG } from '../blogData';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  dict: any;
+}
+
+const Header: React.FC<HeaderProps> = ({ dict }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
@@ -66,7 +71,7 @@ const Header: React.FC = () => {
                   href="/dashboard"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/dashboard') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Dashboard
+                  {dict.common.dashboard}
                 </Link>
                 <Link 
                   href="/studio"
@@ -88,25 +93,25 @@ const Header: React.FC = () => {
                   href="/"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  {SITE_CONFIG.publicationTitle}
+                  {dict.common.transmissions}
                 </Link>
                 <Link 
                   href="/showcase"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Systems
+                  {dict.common.systems}
                 </Link>
                 <Link 
                   href="/studio"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Studio
+                  {dict.common.studio}
                 </Link>
                 <Link 
                   href="/pricing"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/pricing') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Access
+                  {dict.common.access}
                 </Link>
               </>
             )}
@@ -114,20 +119,22 @@ const Header: React.FC = () => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 md:gap-6 z-50">
+          <LanguageSwitcher />
+
           {!isLoggedIn ? (
             <>
               <Link 
                 href="/login"
                 className={`hidden md:block text-[10px] font-mono uppercase tracking-widest transition-colors ${isActive('/login') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
               >
-                Login
+                {dict.common.login}
               </Link>
               
               <Link 
                 href="/studio"
                 className="group flex items-center gap-2 px-6 py-2.5 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-200 transition-all sm:flex hidden"
               >
-                Get Started
+                {dict.common.getStarted}
                 <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
               </Link>
             </>
@@ -137,7 +144,7 @@ const Header: React.FC = () => {
               className="group flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition-all"
             >
               <LayoutDashboard className="w-3 h-3 text-neutral-400 group-hover:text-white" />
-              <span className="hidden sm:inline">Console</span>
+              <span className="hidden sm:inline">{dict.common.console}</span>
             </Link>
           )}
           

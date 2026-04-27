@@ -10,14 +10,18 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@formatjs/intl-localematcher": "^0.8.4",
+    "@types/negotiator": "^0.6.4",
     "better-sqlite3": "^12.9.0",
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^0.554.0",
     "marked": "^18.0.2",
     "motion": "^12.38.0",
+    "negotiator": "^1.0.0",
     "next": "^16.2.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "resend": "^6.12.2",
     "slugify": "^1.6.9",
     "tailwindcss": "^4.2.4",
     "zod": "^4.3.6"

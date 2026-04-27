@@ -1,28 +1,41 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { initDB } from '@/lib/db';
 import { listPublishedPosts } from '@/lib/cms/posts';
 import { listCategories } from '@/lib/cms/categories';
 import { SITE_CONFIG } from '@/blogData';
 import { ArrowRight, Terminal } from 'lucide-react';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale } from '@/lib/i18n-config';
 
-export const metadata: Metadata = {
-  title: `Transmissions | ${SITE_CONFIG.brand}`,
-  description: SITE_CONFIG.subtitle,
-  openGraph: {
-    title: `Transmissions | ${SITE_CONFIG.brand}`,
-    description: SITE_CONFIG.subtitle,
-    type: 'website',
-  },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+  
+  return {
+    title: `${dict.common.transmissions} | ${SITE_CONFIG.brand}`,
+    description: dict.home.heroSubtitle,
+    openGraph: {
+      title: `${dict.common.transmissions} | ${SITE_CONFIG.brand}`,
+      description: dict.home.heroSubtitle,
+      type: 'website',
+    },
+  };
+}
 
 export const revalidate = 60; // ISR: revalidate every 60 seconds
 
-export default function TransmissionsPage({
+export default async function TransmissionsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: Locale }>;
   searchParams: Promise<{ category?: string; q?: string }>;
 }) {
+  const { locale } = await params;
+  const { category, q } = await searchParams;
+  const dict = await getDictionary(locale);
+  
   initDB();
   const categories = listCategories();
 
@@ -34,7 +47,7 @@ export default function TransmissionsPage({
   return (
     <div className="max-w-7xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out]">
       <Link href="/" className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] mb-12 text-neutral-500 hover:text-white transition-colors">
-        ← Back to Base Console
+        ← {dict.common.brand} // Base Console
       </Link>
 
       <header className="mb-20">
@@ -43,27 +56,33 @@ export default function TransmissionsPage({
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-neutral-800 bg-neutral-900/50 rounded-full mb-6">
               <Terminal className="w-3 h-3 text-cyan-500" />
               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400">
-                Transmissions // {SITE_CONFIG.brand}
+                {dict.common.transmissions} // {SITE_CONFIG.brand}
               </span>
             </div>
             <h1 className="text-4xl md:text-8xl font-black text-white uppercase tracking-tighter mb-4 italic">
-              Transmissions
+              {dict.common.transmissions}
             </h1>
             <p className="font-mono text-xs md:text-sm text-neutral-500 uppercase tracking-widest leading-relaxed">
-              {SITE_CONFIG.subtitle}
+              {dict.home.heroSubtitle}
             </p>
           </div>
         </div>
 
         {/* Category Filters */}
         <div className="flex gap-2 overflow-x-auto py-6 border-b border-neutral-900/50">
-          {['All', ...categories.map(c => c.name)].map(cat => (
+          <Link
+            href="/transmissions"
+            className="px-6 py-2 text-[10px] font-mono uppercase tracking-widest transition-all rounded-sm whitespace-nowrap text-neutral-500 hover:text-white hover:bg-neutral-900"
+          >
+            All
+          </Link>
+          {categories.map(cat => (
             <Link
-              key={cat}
-              href={cat === 'All' ? '/transmissions' : `/transmissions/category/${categories.find(c => c.name === cat)?.slug || cat.toLowerCase()}`}
+              key={cat.id}
+              href={`/transmissions/category/${cat.slug}`}
               className="px-6 py-2 text-[10px] font-mono uppercase tracking-widest transition-all rounded-sm whitespace-nowrap text-neutral-500 hover:text-white hover:bg-neutral-900"
             >
-              {cat}
+              {cat.name}
             </Link>
           ))}
         </div>
@@ -73,7 +92,7 @@ export default function TransmissionsPage({
       {featured.length > 0 && (
         <section className="mb-20">
           <p className="text-[9px] font-mono text-neutral-700 uppercase tracking-[0.5em] mb-8">
-            ★ Featured Transmissions
+            ★ Featured {dict.common.transmissions}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featured.slice(0, 2).map((post, i) => (
@@ -98,7 +117,7 @@ export default function TransmissionsPage({
                   </h2>
                   <p className="text-sm text-neutral-500 font-mono leading-relaxed">{post.excerpt}</p>
                   <div className="flex items-center gap-2 mt-6 text-[10px] font-bold text-white uppercase tracking-widest">
-                    Read Transmission <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    {dict.common.readMore} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </Link>
@@ -111,7 +130,7 @@ export default function TransmissionsPage({
       {latest.length > 0 && (
         <section>
           <p className="text-[9px] font-mono text-neutral-700 uppercase tracking-[0.5em] mb-8">
-            Latest Transmissions — {latest.length} signals
+            Latest {dict.common.transmissions} — {latest.length} signals
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {latest.map(post => (
@@ -142,7 +161,7 @@ export default function TransmissionsPage({
                   <div className="flex items-center justify-between pt-6 border-t border-neutral-900/50 mt-auto">
                     <span className="text-[8px] font-mono text-neutral-700 uppercase">{post.sourceType === 'ai_agent' ? 'AI' : 'editorial'}</span>
                     <span className="flex items-center gap-2 text-[10px] font-bold text-white uppercase tracking-widest group/more">
-                      Read Transmission <ArrowRight className="w-3.5 h-3.5 group-hover/more:translate-x-1 transition-transform" />
+                      {dict.common.readMore} <ArrowRight className="w-3.5 h-3.5 group-hover/more:translate-x-1 transition-transform" />
                     </span>
                   </div>
                 </div>

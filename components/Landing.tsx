@@ -21,14 +21,57 @@ import {
   ArrowUpRight,
   AudioLines as WaveIcon
 } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from './Link';
 import { useRouter } from 'next/navigation';
 import { BLOG_POSTS, CATEGORIES, SITE_CONFIG } from '../blogData';
 
-const Landing: React.FC = () => {
+interface LandingProps {
+  dict: any;
+  locale: string;
+}
+
+const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
+
+  const handleSubscribe = async (e: React.FormEvent, source: string) => {
+    e.preventDefault();
+    const targetEmail = e.currentTarget.querySelector('input')?.value || email;
+    
+    if (!targetEmail) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: targetEmail }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSubmitStatus('success');
+        setEmail('');
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(data.error || 'Failed to sync.');
+      }
+    } catch (err) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Check connection.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const categoryOptions = useMemo(() => [
     { slug: 'all', name: 'All' },
@@ -71,23 +114,25 @@ const Landing: React.FC = () => {
       <section className="relative z-10 pt-32 pb-24 px-6 border-b border-neutral-900 overflow-hidden">
          <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
             <div className="flex-1 text-left relative z-10">
-               <div className="inline-flex items-center gap-2 px-3 py-1 border border-neutral-800 bg-neutral-900/50 rounded-full mb-8 backdrop-blur-sm">
-                  <Activity className="w-3 h-3 text-white animate-pulse" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-neutral-400">Signal Captured // {SITE_CONFIG.brand} {SITE_CONFIG.publicationTitle}</span>
-               </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 border border-neutral-800 bg-neutral-900/50 rounded-full mb-8 backdrop-blur-sm">
+                   <Activity className="w-3 h-3 text-white animate-pulse" />
+                   <span className="text-[10px] font-mono uppercase tracking-[0.4em] text-neutral-400">
+                     {dict.home.signalCaptured.replace('{brand}', SITE_CONFIG.brand).replace('{title}', SITE_CONFIG.publicationTitle)}
+                   </span>
+                </div>
                
                <h1 className="text-5xl sm:text-7xl md:text-[140px] font-black text-white tracking-tighter mb-8 leading-[0.8] uppercase italic">
-                  SONIC<br/>VELO<span className="text-neutral-900 stroke-neutral-800" style={{ WebkitTextStroke: '1px #333' }}>CITY</span>
+                  {dict.home.heroTitle1}<br/>{dict.home.heroTitle2}<span className="text-neutral-900 stroke-neutral-800" style={{ WebkitTextStroke: '1px #333' }}>{dict.home.heroTitle3}</span>
                </h1>
 
                <div className="flex items-center gap-12 py-10 border-y border-neutral-900">
                   <p className="max-w-md text-neutral-400 text-sm md:text-base font-mono leading-relaxed uppercase tracking-wider">
-                     {SITE_CONFIG.subtitle}
+                     {dict.home.heroSubtitle}
                   </p>
                   <div className="hidden lg:flex flex-col gap-1 font-mono text-[10px] text-neutral-600 uppercase">
-                     <span>OPERATOR: GEN_Z_SIGNAL</span>
-                     <span>VERSION: ED_v2.04</span>
-                     <span>STATUS: BROADCASTING</span>
+                     <span>{dict.home.operator}</span>
+                     <span>{dict.home.version}</span>
+                     <span>{dict.home.status}</span>
                   </div>
                </div>
             </div>
@@ -145,7 +190,7 @@ const Landing: React.FC = () => {
                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-600 group-hover:text-white transition-colors" />
                <input 
                   type="text"
-                  placeholder="SEARCH_THE_ARCHIVE..."
+                  placeholder={dict.common.search}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="w-full bg-neutral-950/50 border border-neutral-900 py-4 pl-12 pr-6 text-[11px] font-mono text-white placeholder:text-neutral-800 focus:outline-none focus:border-neutral-700 transition-all uppercase tracking-[0.2em] focus:bg-neutral-900"
@@ -198,7 +243,7 @@ const Landing: React.FC = () => {
 
                        <div className="flex items-center justify-between pt-12 border-t border-neutral-900/50 mt-12">
                           <span className="flex items-center gap-3 text-[10px] font-bold text-white uppercase tracking-[0.4em] group/btn">
-                             Read Full Transmission <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
+                             {dict.common.readMore} <ArrowUpRight className="w-4 h-4 group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
                           </span>
                           <div className="hidden sm:flex gap-1">
                              {[1,2,3,4].map(dot => <div key={dot} className="w-1 h-8 bg-neutral-900"></div>)}
@@ -217,7 +262,7 @@ const Landing: React.FC = () => {
                <section id="latest" className="space-y-12">
                   <div className="flex items-center justify-between border-b border-neutral-900 pb-4">
                      <h3 className="text-xl font-black text-white uppercase tracking-tighter flex items-center gap-3">
-                        <Terminal className="w-5 h-5 text-neutral-700" /> Recent Archives
+                        <Terminal className="w-5 h-5 text-neutral-700" /> {dict.common.latest}
                      </h3>
                      <span className="text-[10px] font-mono text-neutral-600 uppercase tracking-widest">{filteredPosts.length} Items Indexed</span>
                   </div>
@@ -275,7 +320,7 @@ const Landing: React.FC = () => {
               <aside className="lg:col-span-4 space-y-16">
                  {/* Trending Signals / Most Read */}
                  <div className="p-8 border border-neutral-900 bg-neutral-950 shadow-2xl relative group">
-                    <h4 className="text-[11px] font-mono font-black text-white uppercase tracking-[0.4em] mb-8 border-b border-neutral-800 pb-4">Trending Signals</h4>
+                    <h4 className="text-[11px] font-mono font-black text-white uppercase tracking-[0.4em] mb-8 border-b border-neutral-800 pb-4">{dict.common.trending}</h4>
                     <div className="flex flex-col gap-3">
                        {trendingByViews.map((post, i) => (
                           <Link 
@@ -332,16 +377,30 @@ const Landing: React.FC = () => {
                     <p className="text-[10px] font-mono uppercase tracking-widest mb-8 leading-relaxed opacity-70">
                        Weekly transmissions on the frontier of AI audio & youth culture.
                     </p>
-                    <div className="space-y-2">
-                       <input 
-                          type="email" 
-                          placeholder="OPERATOR_EMAIL" 
-                          className="w-full px-4 py-3 bg-transparent border-b-2 border-black text-xs font-mono focus:outline-none placeholder:text-black/30"
-                       />
-                       <button className="w-full py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-opacity">
-                          Join Network
-                       </button>
-                    </div>
+                    {submitStatus === 'success' ? (
+                      <div className="py-4 border-2 border-black text-center">
+                        <p className="text-[10px] font-black uppercase tracking-widest">Signal Locked. Welcome.</p>
+                      </div>
+                    ) : (
+                      <form className="space-y-2" onSubmit={(e) => handleSubscribe(e, 'sidebar')}>
+                         <input 
+                            type="email" 
+                            name="email"
+                            placeholder="OPERATOR_EMAIL" 
+                            required
+                            className="w-full px-4 py-3 bg-transparent border-b-2 border-black text-xs font-mono focus:outline-none placeholder:text-black/30"
+                         />
+                         <button 
+                           disabled={isSubmitting}
+                           className="w-full py-4 bg-black text-white text-[10px] font-black uppercase tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50"
+                         >
+                            {isSubmitting ? 'SYNCING...' : 'Join Network'}
+                         </button>
+                         {submitStatus === 'error' && (
+                           <p className="text-[8px] font-mono uppercase text-red-600 mt-2">{errorMessage}</p>
+                         )}
+                      </form>
+                    )}
                  </div>
 
                  {/* Trend Labels */}
@@ -415,22 +474,40 @@ const Landing: React.FC = () => {
             <div className="relative z-10 max-w-xl mx-auto">
                <Mail className="w-8 h-8 text-neutral-700 mx-auto mb-6 group-hover:scale-110 transition-transform" />
                <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-4">
-                  Stay Synchronized
+                  {dict.common.newsletter}
                </h3>
                <p className="text-xs font-mono text-neutral-500 uppercase tracking-widest leading-relaxed mb-10 text-center">
-                  Get the next transmission before it breaks. Receive engineering updates, product drops, and sonic culture reports from Sonic Velocity.
+                  {dict.home.heroSubtitle}
                </p>
                
-               <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => e.preventDefault()}>
-                  <input 
-                    type="email" 
-                    placeholder="ENTER OPERATOR EMAIL..." 
-                    className="flex-1 bg-black border border-neutral-800 px-6 py-4 text-[11px] font-mono text-white placeholder:text-neutral-700 focus:outline-none focus:border-neutral-600 transition-colors uppercase"
-                  />
-                  <button className="bg-white text-black px-10 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-neutral-200 transition-all">
-                     Join Transmission
-                  </button>
-               </form>
+               {submitStatus === 'success' ? (
+                  <div className="py-10 border border-neutral-800 bg-black/40">
+                     <Zap className="w-8 h-8 text-white mx-auto mb-4 animate-pulse" />
+                     <h4 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Network Connection Established</h4>
+                     <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest">Verify your inbox for encryption keys.</p>
+                  </div>
+               ) : (
+                  <form className="flex flex-col sm:flex-row gap-3" onSubmit={(e) => handleSubscribe(e, 'footer')}>
+                     <input 
+                       type="email" 
+                       name="email"
+                       required
+                       value={email}
+                       onChange={(e) => setEmail(e.target.value)}
+                       placeholder={dict.common.emailPlaceholder} 
+                       className="flex-1 bg-black border border-neutral-800 px-6 py-4 text-[11px] font-mono text-white placeholder:text-neutral-700 focus:outline-none focus:border-neutral-600 transition-colors uppercase"
+                     />
+                     <button 
+                       disabled={isSubmitting}
+                       className="bg-white text-black px-10 py-4 text-[10px] font-black uppercase tracking-widest hover:bg-neutral-200 transition-all disabled:opacity-50"
+                     >
+                        {isSubmitting ? 'ESTABLISHING...' : dict.common.subscribe}
+                     </button>
+                  </form>
+               )}
+               {submitStatus === 'error' && (
+                 <p className="mt-4 text-[9px] font-mono text-red-500 uppercase tracking-widest">Error: {errorMessage}</p>
+               )}
 
                <p className="mt-6 text-[8px] font-mono text-neutral-700 uppercase tracking-widest">
                   Secure broadcast // Zero noise // Opt-out anytime

@@ -1,0 +1,30 @@
+{
+  "common": {
+    "brand": "Sonic Velocity",
+    "transmissions": "传输",
+    "studio": "工作室",
+    "systems": "系统",
+    "access": "访问",
+    "login": "登录",
+    "getStarted": "开始使用",
+    "dashboard": "仪表板",
+    "console": "控制台",
+    "readMore": "阅读全文",
+    "search": "搜索档案...",
+    "trending": "趋势信号",
+    "latest": "最新档案",
+    "newsletter": "保持同步",
+    "subscribe": "加入传输",
+    "emailPlaceholder": "输入操作员邮箱..."
+  },
+  "home": {
+    "heroTitle1": "SONIC",
+    "heroTitle2": "VELO",
+    "heroTitle3": "CITY",
+    "heroSubtitle": "推进神经音频系统与文化工程。",
+    "signalCaptured": "捕捉到信号 // {brand} {title}",
+    "operator": "操作员: GEN_Z_SIGNAL",
+    "version": "版本: ED_v2.04",
+    "status": "状态: 正在广播"
+  }
+}

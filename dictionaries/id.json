@@ -1,0 +1,30 @@
+{
+  "common": {
+    "brand": "Sonic Velocity",
+    "transmissions": "Transmisi",
+    "studio": "Studio",
+    "systems": "Sistem",
+    "access": "Akses",
+    "login": "Masuk",
+    "getStarted": "Mulai Sekarang",
+    "dashboard": "Dashboard",
+    "console": "Konsol",
+    "readMore": "Baca Transmisi Lengkap",
+    "search": "CARI_ARSIP...",
+    "trending": "Sinyal Tren",
+    "latest": "Arsip Terbaru",
+    "newsletter": "Tetap Sinkron",
+    "subscribe": "Gabung Transmisi",
+    "emailPlaceholder": "MASUKKAN EMAIL OPERATOR..."
+  },
+  "home": {
+    "heroTitle1": "SONIC",
+    "heroTitle2": "VELO",
+    "heroTitle3": "CITY",
+    "heroSubtitle": "Memajukan Sistem Audio Neural & Rekayasa Budaya.",
+    "signalCaptured": "Sinyal Tertangkap // {brand} {title}",
+    "operator": "OPERATOR: GEN_Z_SIGNAL",
+    "version": "VERSI: ED_v2.04",
+    "status": "STATUS: MENYIARKAN"
+  }
+}

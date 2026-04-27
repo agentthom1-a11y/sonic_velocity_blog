@@ -1,8 +1,8 @@
-import type { Metadata } from 'next';
 import { initDB } from '@/lib/db';
 import { getPostStats, adminListPosts } from '@/lib/cms/posts';
 import { seedDefaultCategories } from '@/lib/cms/categories';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
+import { Locale } from '@/lib/i18n-config';
 
 export const metadata: Metadata = { title: 'Dashboard' };
 
@@ -14,7 +14,8 @@ const STATUS_COLORS: Record<string, string> = {
   archived:  'text-neutral-700 border-neutral-900',
 };
 
-export default function AdminDashboard() {
+export default async function AdminDashboard({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
   // Bootstrap DB on first visit
   initDB();
   seedDefaultCategories();

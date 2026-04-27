@@ -62,6 +62,7 @@ export interface CreatePostInput {
   sourceReference?: string;
   aiSummary?:       string;
   aiPromptVersion?: string;
+  locale?:          string;
 }
 
 /** Find or create a default author. */
@@ -113,6 +114,7 @@ export function createPost(input: CreatePostInput, actorType: 'admin_user' | 'ai
     sourceReference: input.sourceReference,
     aiSummary:       input.aiSummary,
     aiPromptVersion: input.aiPromptVersion,
+    locale:          input.locale || 'en',
   }).returning().get();
 
   // Assign tags
@@ -218,12 +220,16 @@ export function processScheduledPosts() {
 }
 
 /** Get a post with its tags and category (public — only published). */
-export function getPublishedPost(slug: string) {
+export function getPublishedPost(slug: string, locale?: string) {
   initDB();
   processScheduledPosts();
   const now = new Date().toISOString();
+  
+  const conditions = [eq(posts.slug, slug), eq(posts.status, 'published'), lte(posts.publishedAt!, now)];
+  if (locale) conditions.push(eq(posts.locale, locale));
+
   const post = db.select().from(posts)
-    .where(and(eq(posts.slug, slug), eq(posts.status, 'published'), lte(posts.publishedAt!, now)))
+    .where(and(...conditions))
     .get();
   if (!post) return null;
 
@@ -242,7 +248,7 @@ export function getPublishedPost(slug: string) {
 }
 
 /** List published posts. */
-export function listPublishedPosts(opts?: { categorySlug?: string; limit?: number; offset?: number }) {
+export function listPublishedPosts(opts?: { categorySlug?: string; locale?: string; limit?: number; offset?: number }) {
   initDB();
   processScheduledPosts();
   const now = new Date().toISOString();
@@ -255,6 +261,7 @@ export function listPublishedPosts(opts?: { categorySlug?: string; limit?: numbe
 
   const conditions = [eq(posts.status, 'published'), lte(posts.publishedAt!, now)];
   if (catId !== undefined) conditions.push(eq(posts.categoryId!, catId));
+  if (opts?.locale) conditions.push(eq(posts.locale, opts.locale));
 
   const rows = db.select({
     id: posts.id, title: posts.title, slug: posts.slug, excerpt: posts.excerpt,

@@ -53,6 +53,7 @@ export const posts = sqliteTable('posts', {
   sourceReference:  text('source_reference'),
   aiSummary:        text('ai_summary'),
   aiPromptVersion:  text('ai_prompt_version'),
+  locale:           text('locale').notNull().default('en'),
 });
 
 export const tags = sqliteTable('tags', {

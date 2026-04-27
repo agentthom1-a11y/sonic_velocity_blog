@@ -1,11 +1,13 @@
 'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-
-
+import { useParams, useRouter } from 'next/navigation';
+import { Locale } from '@/lib/i18n-config';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const params = useParams();
+  const locale = (params?.locale as Locale) || 'en';
+
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [error, setError]       = useState('');
@@ -25,7 +27,7 @@ export default function AdminLoginPage() {
         const d = await res.json();
         setError(d.error || 'Login failed');
       } else {
-        router.push('/admin');
+        router.push(`/${locale}/admin`);
         router.refresh();
       }
     } catch {

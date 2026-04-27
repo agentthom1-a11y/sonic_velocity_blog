@@ -1,30 +1,51 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { initDB } from '@/lib/db';
 import { getPublishedPost, listPublishedPosts } from '@/lib/cms/posts';
 import { SITE_CONFIG } from '@/blogData';
 import { ArrowLeft, ArrowRight, Clock, User, Calendar, Share2, Activity, Link as LinkIcon } from 'lucide-react';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale, i18n } from '@/lib/i18n-config';
 
-export const revalidate = 60;
+export async function generateStaticParams() {
+  initDB();
+  const posts = listPublishedPosts({ limit: 1000 });
+  
+  // We need to return an array of { slug: string, locale: string }
+  // Since currently posts don't have multiple language versions easily identifiable
+  // we'll just return the current locale for each post.
+  // Ideally we'd have a mapping of translations.
+  return posts.flatMap(post => 
+    i18n.locales.map(locale => ({
+      slug: post.slug,
+      locale
+    }))
+  );
+}
 
 interface Props {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: Locale }>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   initDB();
-  const post = getPublishedPost(slug);
+  const post = getPublishedPost(slug, locale);
   if (!post) return { title: 'Not Found' };
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  const canonical = post.canonicalUrl || `${baseUrl}/transmissions/${post.slug}`;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  const canonical = post.canonicalUrl || `${baseUrl}/${locale}/transmissions/${post.slug}`;
 
   return {
     title:       post.seoTitle || `${post.title} | ${SITE_CONFIG.brand}`,
     description: post.metaDescription || post.excerpt || undefined,
-    alternates:  { canonical },
+    alternates:  { 
+      canonical,
+      languages: Object.fromEntries(
+        i18n.locales.map((l) => [l, `${baseUrl}/${l}/transmissions/${post.slug}`])
+      ),
+    },
     robots:      { index: true, follow: true },
     openGraph: {
       title:       post.seoTitle || post.title,
@@ -131,16 +152,18 @@ function renderMarkdown(content: string) {
 }
 
 export default async function TransmissionArticlePage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const dict = await getDictionary(locale);
+  
   initDB();
-  const post = getPublishedPost(slug);
+  const post = getPublishedPost(slug, locale);
   if (!post) notFound();
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
-  const url = `${baseUrl}/transmissions/${post.slug}`;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  const url = `${baseUrl}/${locale}/transmissions/${post.slug}`;
 
   // Related posts
-  const allPosts = listPublishedPosts({ limit: 50 });
+  const allPosts = listPublishedPosts({ limit: 50, locale });
   const related = allPosts
     .filter(p => p.id !== post.id)
     .map(p => ({
@@ -181,7 +204,7 @@ export default async function TransmissionArticlePage({ params }: Props) {
           href="/transmissions"
           className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] mb-16 text-neutral-500 hover:text-white transition-colors"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> Back to Transmissions
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> {dict.common.transmissions}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">

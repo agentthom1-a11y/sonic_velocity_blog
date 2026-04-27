@@ -1,0 +1,30 @@
+{
+  "common": {
+    "brand": "Sonic Velocity",
+    "transmissions": "トランスミッション",
+    "studio": "スタジオ",
+    "systems": "システム",
+    "access": "アクセス",
+    "login": "ログイン",
+    "getStarted": "始める",
+    "dashboard": "ダッシュボード",
+    "console": "コンソール",
+    "readMore": "トランスミッションを読む",
+    "search": "アーカイブを検索...",
+    "trending": "トレンドシグナル",
+    "latest": "最新アーカイブ",
+    "newsletter": "シンクロを維持",
+    "subscribe": "参加する",
+    "emailPlaceholder": "オペレーターのメールアドレスを入力..."
+  },
+  "home": {
+    "heroTitle1": "SONIC",
+    "heroTitle2": "VELO",
+    "heroTitle3": "CITY",
+    "heroSubtitle": "ニューラルオーディオシステムと文化工学の進化。",
+    "signalCaptured": "シグナル捕捉 // {brand} {title}",
+    "operator": "オペレーター: GEN_Z_SIGNAL",
+    "version": "バージョン: ED_v2.04",
+    "status": "ステータス: 放送中"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "common": {
+    "brand": "Sonic Velo",
+    "transmissions": "Vibes Transmissions",
+    "systems": "The Ecosystem",
+    "studio": "Creative Studio",
+    "access": "Get Access",
+    "dashboard": "My Console",
+    "login": "Sign In Kak",
+    "getStarted": "Start Journey",
+    "console": "Terminal",
+    "newsletter": "Stay In The Loop",
+    "subscribe": "Join Movement",
+    "emailPlaceholder": "DROP YOUR EMAIL HERE...",
+    "search": "SEARCH VIBES...",
+    "readMore": "Read Full Signal",
+    "latest": "Recent Signals",
+    "trending": "Top Trending"
+  },
+  "home": {
+    "signalCaptured": "Signal Captured // {brand} {title}",
+    "heroTitle1": "SONIC",
+    "heroTitle2": "VELO",
+    "heroTitle3": "CITY",
+    "heroSubtitle": "Literally breaking the boundaries of sonic culture, which is very high-tech and basically futuristic.",
+    "operator": "OPERATOR: JAKSEL_SIGNAL",
+    "version": "VERSION: JV_v1.0",
+    "status": "STATUS: VIBING"
+  }
+}

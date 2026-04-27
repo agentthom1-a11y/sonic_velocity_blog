@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import { initDB } from '@/lib/db';
 import { adminListPosts } from '@/lib/cms/posts';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
+import { Locale } from '@/lib/i18n-config';
 
 export const metadata: Metadata = { title: 'Transmissions' };
 
@@ -13,16 +14,18 @@ const STATUS_COLORS: Record<string, string> = {
   archived:  'text-neutral-700 border-neutral-900',
 };
 
-export default function AdminTransmissionsPage({
+export default async function AdminTransmissionsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: Locale }>;
   searchParams: Promise<{ status?: string }>;
 }) {
+  const { locale } = await params;
+  const { status } = await searchParams;
   initDB();
 
-  // In Next.js 16, searchParams is async
-  // We'll handle filtering client-side via URL since this is a server component
-  const posts = adminListPosts({ limit: 200 });
+  const posts = adminListPosts({ status, limit: 200 });
 
   return (
     <div className="max-w-7xl mx-auto px-6 py-12">
@@ -43,13 +46,13 @@ export default function AdminTransmissionsPage({
       {/* Status filter buttons (client JS via href query strings) */}
       <div className="flex gap-2 mb-8 flex-wrap">
         {['all', 'draft', 'review', 'scheduled', 'published', 'archived'].map(s => (
-          <a
+          <Link
             key={s}
             href={s === 'all' ? '/admin/transmissions' : `/admin/transmissions?status=${s}`}
             className="px-4 py-2 text-[9px] uppercase tracking-widest border border-neutral-800 text-neutral-500 hover:text-white hover:border-neutral-600 transition-all"
           >
             {s}
-          </a>
+          </Link>
         ))}
       </div>
 

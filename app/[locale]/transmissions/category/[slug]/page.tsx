@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { initDB } from '@/lib/db';
 import { listPublishedPosts } from '@/lib/cms/posts';
 import { getCategoryBySlug, listCategories } from '@/lib/cms/categories';
 import { SITE_CONFIG } from '@/blogData';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
+import { Locale } from '@/lib/i18n-config';
 
 export const revalidate = 60;
 
-interface Props { params: Promise<{ slug: string }> }
+interface Props { params: Promise<{ slug: string; locale: Locale }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -23,12 +24,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CategoryPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   initDB();
   const cat = getCategoryBySlug(slug);
   if (!cat) notFound();
 
-  const posts = listPublishedPosts({ categorySlug: slug, limit: 50 });
+  const posts = listPublishedPosts({ categorySlug: slug, locale, limit: 50 });
   const allCategories = listCategories();
 
   return (
