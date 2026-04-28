@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { initDB } from '@/lib/db';
 import { getPostStats, adminListPosts } from '@/lib/cms/posts';
 import { seedDefaultCategories } from '@/lib/cms/categories';

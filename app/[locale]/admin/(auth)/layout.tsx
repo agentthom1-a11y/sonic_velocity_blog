@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { Link } from '@/components/Link';
 import { Locale } from '@/lib/i18n-config';
 import { verifyAdminToken } from '@/app/api/admin/auth/route';
-import LogoutButton from '@/app/admin/LogoutButton';
+import LogoutButton from '@/app/[locale]/admin/LogoutButton';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },

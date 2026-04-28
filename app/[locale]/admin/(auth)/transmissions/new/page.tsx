@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { initDB } from '@/lib/db';
 import { listCategories } from '@/lib/cms/categories';
-import PostEditor from '@/app/admin/(auth)/transmissions/PostEditor';
+import PostEditor from '@/app/[locale]/admin/(auth)/transmissions/PostEditor';
 
 export const metadata: Metadata = { title: 'New Transmission' };
 

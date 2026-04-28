@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { initDB } from '@/lib/db';
 import { adminGetPost } from '@/lib/cms/posts';
 import { listCategories } from '@/lib/cms/categories';
-import PostEditor from '@/app/admin/(auth)/transmissions/PostEditor';
+import PostEditor from '@/app/[locale]/admin/(auth)/transmissions/PostEditor';
 
 export const metadata: Metadata = { title: 'Edit Transmission' };
 
