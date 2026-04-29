@@ -7,7 +7,7 @@ export const i18n = {
     ja: '日本語',
     zh: '中文',
     id: 'Bahasa Indonesia',
-    jaksel: 'Jaksel Vibes',
+    jaksel: 'Jaksel',
   },
   directions: {
     en: 'ltr',

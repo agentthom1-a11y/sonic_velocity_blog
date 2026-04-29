@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY || 're_dummy');
+import nodemailer from 'nodemailer';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,10 +12,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 1. Send Welcome Email
-    const { data, error } = await resend.emails.send({
-      from: 'Sonic Velocity <insider@sonicvelocitymusic.com>',
-      to: [email],
+    // 1. Configure the SMTP transport (cPanel)
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    // 2. Send Welcome Email
+    const info = await transporter.sendMail({
+      from: `"Sonic Velocity" <${process.env.SMTP_USER || 'insider@sonicvelocitymusic.com'}>`,
+      to: email,
       subject: 'Signal Established: Welcome to the Sonic Velocity Network',
       html: `
         <div style="font-family: 'Courier New', Courier, monospace; background-color: #000; color: #fff; padding: 40px; line-height: 1.6;">
@@ -39,16 +48,11 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    if (error) {
-      console.error('Resend error:', error);
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({ success: true, messageId: info.messageId });
   } catch (err: any) {
     console.error('Subscription error:', err);
     return NextResponse.json(
-      { error: 'Failed to process subscription.' },
+      { error: 'Failed to process subscription. Check SMTP settings.' },
       { status: 500 }
     );
   }
