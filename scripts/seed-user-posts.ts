@@ -423,7 +423,7 @@ async function runSeed() {
     const mdContent = generateMarkdown(post);
     
     // Convert 'published' status from JSON to our PostStatus type, fallback to draft
-    const status = post.status === 'published' ? 'published' : 'draft';
+    const status = (post.status === 'published' ? 'published' : 'draft') as 'published' | 'draft';
 
     const input = {
       title: post.title,
