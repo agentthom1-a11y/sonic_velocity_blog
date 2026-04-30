@@ -248,7 +248,7 @@ export function getPublishedPost(slug: string, locale?: string) {
 }
 
 /** List published posts. */
-export function listPublishedPosts(opts?: { categorySlug?: string; locale?: string; limit?: number; offset?: number }) {
+export function listPublishedPosts(opts?: { categorySlug?: string; locale?: string; limit?: number; offset?: number; search?: string }) {
   initDB();
   processScheduledPosts();
   const now = new Date().toISOString();
@@ -262,6 +262,10 @@ export function listPublishedPosts(opts?: { categorySlug?: string; locale?: stri
   const conditions = [eq(posts.status, 'published'), lte(posts.publishedAt!, now)];
   if (catId !== undefined) conditions.push(eq(posts.categoryId!, catId));
   if (opts?.locale) conditions.push(eq(posts.locale, opts.locale));
+  if (opts?.search) {
+    const q = `%${opts.search}%`;
+    conditions.push(sql`(${posts.title} LIKE ${q} OR ${posts.excerpt} LIKE ${q} OR ${posts.contentMarkdown} LIKE ${q})`);
+  }
 
   const rows = db.select({
     id: posts.id, title: posts.title, slug: posts.slug, excerpt: posts.excerpt,

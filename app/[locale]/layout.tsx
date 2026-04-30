@@ -27,8 +27,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = await getDictionary(locale);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
   
   return {
+    metadataBase: new URL(baseUrl),
     title: dict.home.heroTitle1 + " " + dict.home.heroTitle2 + " " + dict.home.heroTitle3 + " – AI Audio Synthesis",
     description: dict.home.heroSubtitle,
     keywords: ["AI music", "TikTok Remix", "Dangdut Koplo", "Audio Synthesis", "Music Generation", "DJ TikTok", "AI Producer"],
@@ -40,7 +42,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
     },
     openGraph: {
       type: "website",
-      url: `https://velocity-audio.ai/${locale}`,
+      url: `${baseUrl}/${locale}`,
       title: "Velocity Blog – AI Audio Synthesis & Remix Culture",
       description: dict.home.heroSubtitle,
       images: ["/og-banner.jpg"],
@@ -75,9 +77,27 @@ export default async function RootLayout({
   const { locale } = await params;
   const dict = await getDictionary(locale);
   const direction = i18n.directions[locale] || 'ltr';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    url: baseUrl,
+    potentialAction: {
+      '@type': 'SearchAction',
+      'target': `${baseUrl}/${locale}/transmissions?q={search_term_string}`,
+      'query-input': 'required name=search_term_string'
+    }
+  };
 
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body className={`${manrope.variable} ${jetbrainsMono.variable} antialiased min-h-screen relative flex flex-col`} suppressHydrationWarning>
         <AppProvider>
           <PreloaderWrapper>

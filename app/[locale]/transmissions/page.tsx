@@ -39,8 +39,8 @@ export default async function TransmissionsPage({
   initDB();
   const categories = listCategories();
 
-  // Get all published posts — filter is cosmetic on client (or we do it server-side)
-  const allPosts = listPublishedPosts({ limit: 100 });
+  // Get published posts with optional search
+  const allPosts = listPublishedPosts({ limit: 100, locale, search: q });
   const featured = allPosts.filter(p => p.featured === 1);
   const latest   = allPosts.filter(p => p.featured !== 1);
 
@@ -65,6 +65,21 @@ export default async function TransmissionsPage({
             <p className="font-mono text-xs md:text-sm text-neutral-500 uppercase tracking-widest leading-relaxed">
               {dict.home.heroSubtitle}
             </p>
+          </div>
+          
+          <div className="flex flex-col gap-4 w-full md:w-auto">
+             <form action={`/${locale}/transmissions`} method="GET" className="relative group">
+               <input 
+                 type="text" 
+                 name="q"
+                 defaultValue={q}
+                 placeholder="Search_Archive..." 
+                 className="w-full md:w-80 bg-neutral-950 border border-neutral-900 py-3 pl-12 pr-6 text-[11px] font-mono text-white focus:outline-none focus:border-neutral-700 transition-all uppercase tracking-widest"
+               />
+               <button type="submit" className="absolute left-4 top-1/2 -translate-y-1/2">
+                 <Terminal className="w-4 h-4 text-neutral-600 group-focus-within:text-white transition-colors" />
+               </button>
+             </form>
           </div>
         </div>
 

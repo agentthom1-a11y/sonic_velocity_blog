@@ -113,6 +113,12 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                 >
                   {dict.common.access}
                 </Link>
+                <Link 
+                  href="/models"
+                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/models') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                >
+                  Models
+                </Link>
               </>
             )}
         </nav>
