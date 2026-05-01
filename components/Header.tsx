@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Activity, Menu, ChevronRight, LayoutDashboard, Globe } from 'lucide-react';
+import { Activity, Menu, ChevronRight, LayoutDashboard, Globe, Zap, ZapOff } from 'lucide-react';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ViewType } from '../types';
 import { Link } from './Link';
@@ -19,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { isLoggedIn, userTier } = useAppContext();
+  const { isLoggedIn, userTier, isMinimalist, toggleMinimalism } = useAppContext();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -125,6 +125,17 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
 
         {/* Right Actions */}
         <div className="flex items-center gap-4 md:gap-6 z-50">
+          <button 
+            onClick={toggleMinimalism}
+            className={`flex items-center justify-center w-8 h-8 rounded-full border transition-all ${
+              isMinimalist 
+                ? 'bg-cyan-500/10 border-cyan-500/50 text-cyan-400' 
+                : 'bg-neutral-900 border-neutral-800 text-neutral-500 hover:text-white'
+            }`}
+            title={isMinimalist ? "Enable Visual Effects" : "Enable Minimalist Mode"}
+          >
+            {isMinimalist ? <ZapOff className="w-3.5 h-3.5" /> : <Zap className="w-3.5 h-3.5" />}
+          </button>
           <LanguageSwitcher />
 
           {!isLoggedIn ? (

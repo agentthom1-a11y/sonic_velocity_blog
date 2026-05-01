@@ -52,6 +52,42 @@ const AI_MODELS = [
     relatedPostSlug: 'local-culture-global-sound-indonesian-internet-moments-asian-music-signals'
   },
   {
+    name: 'Sonic Velocity: Genesis Core',
+    category: 'Flagship Multimodal Engine',
+    description: 'Our most advanced foundation model. Trained on pan-Asian music catalogs to deliver unprecedented semantic control across production, composition, and vocal synthesis.',
+    tags: ['Foundation Model', 'Zero-Shot', 'Pan-Asian'],
+    relatedPostSlug: 'ai-music-generator-trends-2026-asian-music-production',
+    featured: true
+  },
+  {
+    name: 'Sonic Velocity: Hallyu Spec',
+    category: 'Genre-Specific Engine',
+    description: 'Proprietary model fine-tuned for high-energy K-Pop arrangements, synchronized group vocals, and pristine commercial mixing.',
+    tags: ['K-Pop', 'Group Vocals', 'Commercial'],
+    relatedPostSlug: 'ai-music-generator-trends-2026-asian-music-production'
+  },
+  {
+    name: 'Sonic Velocity: Nusantara Rhythm',
+    category: 'Regional Rhythm Engine',
+    description: 'Architecture explicitly designed for Indonesian Dangdut, featuring authentic Kendang rhythmic patterns and vocal cengkok modeling.',
+    tags: ['Dangdut', 'Indonesia', 'Rhythm'],
+    relatedPostSlug: 'southeast-asia-music-charts-explained-indonesia-thailand-vietnam-philippines-malaysia-singapore'
+  },
+  {
+    name: 'Sonic Velocity: Shonen Spark',
+    category: 'Instrumental & Vocal Synthesis',
+    description: 'Model excelling in complex band instrumentation, distorted guitar harmonics, and dynamic anime-opening song structures.',
+    tags: ['J-Rock', 'Band Sim', 'High Energy'],
+    relatedPostSlug: 'local-culture-global-sound-indonesian-internet-moments-asian-music-signals'
+  },
+  {
+    name: 'Sonic Velocity: Siam Wave',
+    category: 'Genre-Specific Engine',
+    description: 'Optimizing Thai Pop melodic sensibilities with lush synthesizer layers and emotional vocal delivery systems.',
+    tags: ['T-Pop', 'Synth', 'Melodic'],
+    relatedPostSlug: 'viral-tiktok-songs-indonesia-2026-predict-next-fyp-hit'
+  },
+  {
     name: 'Flux Audio',
     category: 'Fast Iteration',
     description: 'Optimized for speed, generating 15-30 second viral clips and hooks in seconds for rapid social media testing.',
@@ -64,8 +100,30 @@ export default async function ModelsIndexPage({ params }: { params: Promise<{ lo
   const { locale } = await params;
   const dict = await getDictionary(locale);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'AI Music Models Index',
+    description: 'A comprehensive index of AI music models, synthesis engines, and production tools for the Asian music market.',
+    itemListElement: AI_MODELS.map((model, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'SoftwareApplication',
+        name: model.name,
+        applicationCategory: 'MultimediaApplication',
+        description: model.description,
+        url: `${baseUrl}/${locale}/transmissions/${model.relatedPostSlug}`,
+        keywords: model.tags.join(', ')
+      }
+    }))
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href="/" className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] mb-12 text-neutral-500 hover:text-white transition-colors">
         ← {SITE_CONFIG.brand} // Base Console
       </Link>
@@ -100,9 +158,51 @@ export default async function ModelsIndexPage({ params }: { params: Promise<{ lo
         </div>
       </header>
 
+      {/* Featured Model */}
+      {AI_MODELS.filter(m => m.featured).map((model, i) => (
+        <div key={`featured-${i}`} className="group relative border border-cyan-500/50 bg-cyan-950/20 p-8 md:p-12 hover:border-cyan-400 transition-all overflow-hidden mb-12 rounded-xl shadow-[0_0_50px_-12px_rgba(6,182,212,0.15)]">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-cyan-500/20 transition-all"></div>
+          
+          <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center md:items-start justify-between">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest px-2 py-1 border border-cyan-500/30 bg-cyan-500/10">Primary Engine</span>
+                <span className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest">{model.category}</span>
+              </div>
+              
+              <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tight mb-4 italic">
+                {model.name}
+              </h3>
+              
+              <p className="text-sm text-neutral-400 font-mono leading-relaxed mb-8 max-w-2xl">
+                {model.description}
+              </p>
+              
+              <div className="flex flex-wrap gap-2 mb-8 md:mb-0">
+                {model.tags.map(tag => (
+                  <span key={tag} className="text-[10px] font-mono px-3 py-1 border border-cyan-900/50 text-cyan-500 uppercase tracking-widest bg-cyan-950/30">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+            
+            <div className="w-full md:w-auto shrink-0 flex items-center justify-center pt-4 md:pt-0">
+               <Link 
+                  href={`/transmissions/${model.relatedPostSlug}`}
+                  className="flex items-center justify-center gap-3 px-8 py-4 bg-cyan-500 hover:bg-cyan-400 text-black font-mono text-xs uppercase tracking-[0.2em] transition-all hover:scale-105 active:scale-95 w-full md:w-auto"
+                >
+                  <Zap className="w-4 h-4" />
+                  <span>Access Engine</span>
+                </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+
       {/* Grid of Models */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {AI_MODELS.map((model, i) => (
+        {AI_MODELS.filter(m => !m.featured).map((model, i) => (
           <div key={i} className="group relative border border-neutral-900 bg-neutral-950/20 p-8 hover:border-white transition-all overflow-hidden">
             {/* Background Glow */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/5 blur-[80px] rounded-full pointer-events-none group-hover:bg-cyan-500/20 transition-all"></div>

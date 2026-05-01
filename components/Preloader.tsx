@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mic2, Activity, Play, Radio, Volume2, Database, Zap } from 'lucide-react';
+import { Mic2, Activity, Play, Radio, Volume2, Database, Zap, Loader2 } from 'lucide-react';
+import { useAppContext } from './AppContext';
 
 const LOG_MESSAGES = [
   'FETCHING_METADATA_SIGNALS',
@@ -18,6 +19,7 @@ const LOG_MESSAGES = [
 ];
 
 const Preloader = ({ onComplete }: { onComplete: () => void }) => {
+  const { isMinimalist } = useAppContext();
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState('Initializing Core');
   const [logIndex, setLogIndex] = useState(0);
@@ -51,6 +53,20 @@ const Preloader = ({ onComplete }: { onComplete: () => void }) => {
     else if (progress < 95) setStatus('Finalizing Transmission');
     else setStatus('Ready for Access');
   }, [progress]);
+
+  if (isMinimalist) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden font-mono">
+        <div className="flex flex-col items-center gap-6">
+          <Loader2 className="w-8 h-8 text-cyan-500 animate-spin" />
+          <div className="text-[10px] text-neutral-500 uppercase tracking-[0.5em] flex items-center gap-3">
+             <span className="text-white font-black">{Math.floor(progress)}%</span>
+             <span>{status}</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden font-sans">

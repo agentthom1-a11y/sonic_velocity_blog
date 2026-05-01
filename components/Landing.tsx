@@ -24,6 +24,7 @@ import {
 import { Link } from './Link';
 import { useRouter } from 'next/navigation';
 import { BLOG_POSTS, CATEGORIES, SITE_CONFIG } from '../blogData';
+import DailyHitsRateForm from './DailyHitsRateForm';
 
 interface LandingProps {
   dict: any;
@@ -318,6 +319,9 @@ const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
             {/* SIDEBAR: MOST READ / TRENDS (Active in index view) */}
             {activeCategory === 'all' && !searchQuery && (
               <aside className="lg:col-span-4 space-y-16">
+                 {/* Daily Hits Rate Form */}
+                 <DailyHitsRateForm />
+
                  {/* Trending Signals / Most Read */}
                  <div className="p-8 border border-neutral-900 bg-neutral-950 shadow-2xl relative group">
                     <h4 className="text-[11px] font-mono font-black text-white uppercase tracking-[0.4em] mb-8 border-b border-neutral-800 pb-4">{dict.common.trending}</h4>

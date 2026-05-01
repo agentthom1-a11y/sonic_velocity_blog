@@ -244,7 +244,14 @@ export function getPublishedPost(slug: string, locale?: string) {
     const a = db.select({ name: authors.name }).from(authors).where(eq(authors.id, post.authorId)).get();
     if (a) author = a;
   }
-  return { ...post, tags: tagNames, category, author };
+  return { 
+    ...post, 
+    seoTitle: post.seoTitle || post.title,
+    metaDescription: post.metaDescription || post.excerpt,
+    tags: tagNames, 
+    category, 
+    author 
+  };
 }
 
 /** List published posts. */
@@ -275,6 +282,7 @@ export function listPublishedPosts(opts?: { categorySlug?: string; locale?: stri
     categoryId: posts.categoryId,
     categoryName: categories.name, categorySlug: categories.slug,
     authorName: authors.name,
+    seoTitle: posts.seoTitle, metaDescription: posts.metaDescription,
   })
   .from(posts)
   .leftJoin(categories, eq(posts.categoryId, categories.id))
@@ -287,6 +295,8 @@ export function listPublishedPosts(opts?: { categorySlug?: string; locale?: stri
 
   return rows.map(r => ({
     ...r,
+    seoTitle: r.seoTitle || r.title,
+    metaDescription: r.metaDescription || r.excerpt,
     tags: getPostTagNames(r.id),
     category: r.categoryName ? { name: r.categoryName, slug: r.categorySlug! } : null,
     author:   r.authorName ? { name: r.authorName } : null,

@@ -175,25 +175,66 @@ export default async function TransmissionArticlePage({ params }: Props) {
     .slice(0, 3)
     .map(p => p.post);
 
+  const wordCount = post.contentMarkdown?.split(/\s+/).length || 0;
+  
   // JSON-LD
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BlogPosting',
-    headline: post.title,
-    image: post.coverImageUrl || undefined,
-    author: { '@type': 'Organization', name: post.author?.name || SITE_CONFIG.defaultAuthor },
-    publisher: {
-      '@type': 'Organization',
-      name: SITE_CONFIG.brand,
-      logo: { '@type': 'ImageObject', url: `${baseUrl}/logo.png` },
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'TechArticle',
+      headline: post.title,
+      image: post.coverImageUrl || undefined,
+      author: { 
+        '@type': post.sourceType === 'ai_agent' ? 'SoftwareApplication' : 'Person', 
+        name: post.author?.name || SITE_CONFIG.defaultAuthor,
+        url: baseUrl
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_CONFIG.brand,
+        logo: { '@type': 'ImageObject', url: `${baseUrl}/icon.svg` },
+      },
+      datePublished: post.publishedAt,
+      dateModified:  post.updatedAt || post.publishedAt,
+      description:   post.metaDescription || post.excerpt,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+      keywords: post.tags.join(', '),
+      articleSection: post.category?.name,
+      wordCount: wordCount,
+      timeRequired: `PT${Math.ceil(wordCount / 200)}M`,
+      inLanguage: locale
     },
-    datePublished: post.publishedAt,
-    dateModified:  post.updatedAt,
-    description:   post.metaDescription || post.excerpt,
-    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
-    keywords: post.tags.join(', '),
-    articleSection: post.category?.name,
-  };
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: `${baseUrl}/${locale}`
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Transmissions',
+          item: `${baseUrl}/${locale}/transmissions`
+        },
+        ...(post.category ? [{
+          '@type': 'ListItem',
+          position: 3,
+          name: post.category.name,
+          item: `${baseUrl}/${locale}/transmissions/category/${post.category.slug}`
+        }] : []),
+        {
+          '@type': 'ListItem',
+          position: post.category ? 4 : 3,
+          name: post.title,
+          item: url
+        }
+      ]
+    }
+  ];
 
   return (
     <div className="relative min-h-screen bg-black text-neutral-300">

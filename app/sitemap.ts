@@ -1,78 +1,57 @@
 import { MetadataRoute } from 'next';
-import { initDB } from '@/lib/db';
 import { listPublishedPosts } from '@/lib/cms/posts';
+import { listCategories } from '@/lib/cms/categories';
 import { i18n } from '@/lib/i18n-config';
+import { initDB } from '@/lib/db';
 
-export const revalidate = 3600;
-
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
 
-  const staticRoutes = [
-    { path: '', priority: 1, changeFrequency: 'weekly' },
-    { path: 'transmissions', priority: 0.9, changeFrequency: 'daily' },
-    { path: 'blog', priority: 0.8, changeFrequency: 'daily' },
-    { path: 'about', priority: 0.5, changeFrequency: 'monthly' },
-    { path: 'pricing', priority: 0.6, changeFrequency: 'monthly' },
-  ];
+  initDB();
+  const posts = listPublishedPosts({ limit: 1000 });
+  const categories = listCategories();
 
-  let posts: any[] = [];
-  try {
-    initDB();
-    posts = listPublishedPosts({ limit: 1000 });
-  } catch (e) {
-    console.error('Sitemap DB error:', e);
-  }
+  // Base routes for each locale
+  const routes = i18n.locales.flatMap((locale) => [
+    {
+      url: `${baseUrl}/${locale}`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/${locale}/transmissions`,
+      lastModified: new Date(),
+      changeFrequency: 'daily' as const,
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/${locale}/models`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.8,
+    },
+  ]);
 
-  const sitemapEntries: MetadataRoute.Sitemap = [];
+  // Posts routes
+  const postRoutes = posts.flatMap((post) =>
+    i18n.locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/transmissions/${post.slug}`,
+      lastModified: new Date(post.updatedAt || post.publishedAt || new Date()),
+      changeFrequency: 'weekly' as const,
+      priority: 0.7,
+    }))
+  );
 
-  // Generate entries for each locale and each route
-  for (const locale of i18n.locales) {
-    const isDefault = locale === i18n.defaultLocale;
-    const localePath = isDefault ? '' : `/${locale}`;
+  // Category routes
+  const categoryRoutes = categories.flatMap((cat) =>
+    i18n.locales.map((locale) => ({
+      url: `${baseUrl}/${locale}/transmissions/category/${cat.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly' as const,
+      priority: 0.6,
+    }))
+  );
 
-    // Static pages
-    for (const route of staticRoutes) {
-      const path = route.path ? `/${route.path}` : '';
-      const url = `${baseUrl}${localePath}${path}`;
-      
-      sitemapEntries.push({
-        url,
-        lastModified: new Date(),
-        changeFrequency: route.changeFrequency as any,
-        priority: route.priority,
-        alternates: {
-          languages: Object.fromEntries(
-            i18n.locales.map((l) => [
-              l,
-              `${baseUrl}${l === i18n.defaultLocale ? '' : `/${l}`}${path}`
-            ])
-          )
-        }
-      });
-    }
-
-    // Dynamic post pages
-    for (const post of posts) {
-      const path = `/transmissions/${post.slug}`;
-      const url = `${baseUrl}${localePath}${path}`;
-      
-      sitemapEntries.push({
-        url,
-        lastModified: new Date(post.publishedAt || Date.now()),
-        changeFrequency: 'weekly',
-        priority: post.featured ? 0.9 : 0.7,
-        alternates: {
-          languages: Object.fromEntries(
-            i18n.locales.map((l) => [
-              l,
-              `${baseUrl}${l === i18n.defaultLocale ? '' : `/${l}`}${path}`
-            ])
-          )
-        }
-      });
-    }
-  }
-
-  return sitemapEntries;
+  return [...routes, ...postRoutes, ...categoryRoutes];
 }

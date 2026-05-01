@@ -44,8 +44,24 @@ export default async function TransmissionsPage({
   const featured = allPosts.filter(p => p.featured === 1);
   const latest   = allPosts.filter(p => p.featured !== 1);
 
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${dict.common.transmissions} | ${SITE_CONFIG.brand}`,
+    description: dict.home.heroSubtitle,
+    url: `${baseUrl}/${locale}/transmissions`,
+    hasPart: allPosts.map(post => ({
+      '@type': 'TechArticle',
+      headline: post.title,
+      url: `${baseUrl}/${locale}/transmissions/${post.slug}`
+    }))
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <Link href="/" className="group flex items-center gap-2 text-[10px] font-mono uppercase tracking-[0.3em] mb-12 text-neutral-500 hover:text-white transition-colors">
         ← {dict.common.brand} // Base Console
       </Link>

@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 
 import PreloaderWrapper from "@/components/PreloaderWrapper";
 import { AIProducerBotWrapper } from "@/components/AIProducerBotWrapper";
+import ClientBackgroundEffects from "@/components/ClientBackgroundEffects";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -79,16 +80,36 @@ export default async function RootLayout({
   const direction = i18n.directions[locale] || 'ltr';
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    url: baseUrl,
-    potentialAction: {
-      '@type': 'SearchAction',
-      'target': `${baseUrl}/${locale}/transmissions?q={search_term_string}`,
-      'query-input': 'required name=search_term_string'
+  const jsonLd = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      url: baseUrl,
+      name: 'Sonic Velocity',
+      description: dict.home.heroSubtitle,
+      potentialAction: {
+        '@type': 'SearchAction',
+        'target': `${baseUrl}/${locale}/transmissions?q={search_term_string}`,
+        'query-input': 'required name=search_term_string'
+      }
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'Sonic Velocity',
+      url: baseUrl,
+      logo: `${baseUrl}/icon.svg`,
+      sameAs: [
+        'https://twitter.com/sonicvelocity',
+        'https://linkedin.com/company/sonicvelocity'
+      ],
+      contactPoint: {
+        '@type': 'ContactPoint',
+        contactType: 'customer support',
+        url: `${baseUrl}/${locale}/contact`
+      }
     }
-  };
+  ];
 
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
@@ -102,9 +123,7 @@ export default async function RootLayout({
         <AppProvider>
           <PreloaderWrapper>
             <div className="flex-1 flex flex-col">
-              {/* Background Effects */}
-              <div className="fixed inset-0 z-[-1] bg-grid opacity-[0.15] pointer-events-none"></div>
-              <div className="fixed inset-0 z-[-1] bg-gradient-to-b from-neutral-900/0 to-black pointer-events-none"></div>
+              <ClientBackgroundEffects />
               
               <Header dict={dict} />
 

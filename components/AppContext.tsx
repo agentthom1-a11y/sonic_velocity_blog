@@ -24,6 +24,8 @@ interface AppContextType {
   ) => Promise<void>;
   theme: 'dark' | 'light';
   toggleTheme: () => void;
+  isMinimalist: boolean;
+  toggleMinimalism: () => void;
   handleLoginSuccess: (tier: UserTier) => void;
   handleSignOut: () => void;
 }
@@ -59,6 +61,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   ]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [isMinimalist, setIsMinimalist] = useState(false);
   const simulationMode = IS_DEMO_MODE;
 
   // Ref to keep track of polling intervals
@@ -88,6 +91,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const toggleTheme = () => {
     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  };
+
+  const toggleMinimalism = () => {
+    setIsMinimalist(prev => !prev);
   };
 
   const handleCreateJob = async (
@@ -190,6 +197,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       isSubmitting,
       handleCreateJob,
       theme, toggleTheme,
+      isMinimalist, toggleMinimalism,
       handleLoginSuccess,
       handleSignOut
     }}>
