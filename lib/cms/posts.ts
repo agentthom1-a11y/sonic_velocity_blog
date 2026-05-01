@@ -278,7 +278,7 @@ export function listPublishedPosts(opts?: { categorySlug?: string; locale?: stri
     id: posts.id, title: posts.title, slug: posts.slug, excerpt: posts.excerpt,
     coverImageUrl: posts.coverImageUrl, coverImageAlt: posts.coverImageAlt,
     featured: posts.featured, readingTime: posts.readingTime,
-    publishedAt: posts.publishedAt, sourceType: posts.sourceType,
+    publishedAt: posts.publishedAt, updatedAt: posts.updatedAt, sourceType: posts.sourceType,
     categoryId: posts.categoryId,
     categoryName: categories.name, categorySlug: categories.slug,
     authorName: authors.name,
