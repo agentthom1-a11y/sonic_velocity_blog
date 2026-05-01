@@ -536,9 +536,13 @@ const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
                     </p>
                   </div>
                   <div className="flex gap-4">
-                     {[Twitter, Instagram, Music].map((Icon, i) => (
-                        <a key={i} href="#" className="w-8 h-8 flex items-center justify-center border border-neutral-800 hover:border-white hover:text-white text-neutral-600 transition-all">
-                           <Icon className="w-4 h-4" />
+                     {[
+                       { Icon: Twitter, href: SITE_CONFIG.socials.twitter },
+                       { Icon: Instagram, href: SITE_CONFIG.socials.instagram },
+                       { Icon: Music, href: "#" }
+                     ].map((item, i) => (
+                        <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center border border-neutral-800 hover:border-white hover:text-white text-neutral-600 transition-all">
+                           <item.Icon className="w-4 h-4" />
                         </a>
                      ))}
                   </div>

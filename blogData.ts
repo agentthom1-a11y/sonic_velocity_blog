@@ -14,6 +14,10 @@ export interface SiteConfig {
   defaultOgImage: string;
   description: string;
   baseUrl: string;
+  socials: {
+    instagram: string;
+    twitter: string;
+  };
 }
 
 export interface Category {
@@ -121,6 +125,10 @@ export const SITE_CONFIG: SiteConfig = {
   description:
     "Sonic Velocity tracks music signals, viral genre movements, AI music marketing, and internet-native artist momentum.",
   baseUrl: "https://sonicvelocitymusic.com",
+  socials: {
+    instagram: "https://www.instagram.com/sonicvelocitymusic/",
+    twitter: "https://x.com/sonicvelmusic",
+  },
 };
 
 export const CATEGORIES: Category[] = [

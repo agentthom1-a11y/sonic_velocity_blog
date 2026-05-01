@@ -204,8 +204,8 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                 <div className="flex justify-between items-center text-[10px] font-mono text-neutral-600 uppercase tracking-widest">
                   <span>VELOCITY_MOBILE_SYNC</span>
                   <div className="flex gap-4">
-                    <button className="hover:text-white">TW</button>
-                    <button className="hover:text-white">IG</button>
+                    <a href={SITE_CONFIG.socials.twitter} target="_blank" rel="noopener noreferrer" className="hover:text-white">TW</a>
+                    <a href={SITE_CONFIG.socials.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-white">IG</a>
                   </div>
                 </div>
               </div>

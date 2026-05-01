@@ -52,6 +52,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
       card: "summary_large_image",
       title: "Velocity Blog – AI Music Insights",
       description: dict.home.heroSubtitle,
+      site: "@sonicvelmusic",
+      creator: "@sonicvelmusic",
     },
     robots: {
       index: true,
@@ -100,8 +102,8 @@ export default async function RootLayout({
       url: baseUrl,
       logo: `${baseUrl}/icon.svg`,
       sameAs: [
-        'https://twitter.com/sonicvelocity',
-        'https://linkedin.com/company/sonicvelocity'
+        'https://x.com/sonicvelmusic',
+        'https://www.instagram.com/sonicvelocitymusic/',
       ],
       contactPoint: {
         '@type': 'ContactPoint',
