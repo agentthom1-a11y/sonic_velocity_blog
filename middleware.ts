@@ -64,7 +64,7 @@ async function verifySessionEdge(token: string): Promise<boolean> {
   }
 }
 
-export default async function proxy(request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // 1. Check if there is any supported locale in the pathname

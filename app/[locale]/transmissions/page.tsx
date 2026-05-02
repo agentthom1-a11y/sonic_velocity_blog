@@ -11,14 +11,22 @@ import { Locale } from '@/lib/i18n-config';
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = await getDictionary(locale);
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
   
   return {
     title: `${dict.common.transmissions} | ${SITE_CONFIG.brand}`,
-    description: dict.home.heroSubtitle,
+    description: `Browse all transmissions and signals from ${SITE_CONFIG.brand} regarding AI audio and remix culture.`,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/transmissions`,
+      languages: Object.fromEntries(
+        i18n.locales.map((l) => [l, `${baseUrl}/${l}/transmissions`])
+      ),
+    },
     openGraph: {
       title: `${dict.common.transmissions} | ${SITE_CONFIG.brand}`,
       description: dict.home.heroSubtitle,
       type: 'website',
+      url: `${baseUrl}/${locale}/transmissions`,
     },
   };
 }

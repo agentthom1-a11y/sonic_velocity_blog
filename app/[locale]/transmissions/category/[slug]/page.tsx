@@ -13,13 +13,22 @@ export const revalidate = 60;
 interface Props { params: Promise<{ slug: string; locale: Locale }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   initDB();
   const cat = getCategoryBySlug(slug);
   if (!cat) return { title: 'Not Found' };
+  
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+
   return {
     title: `${cat.name} — ${SITE_CONFIG.brand} Transmissions`,
     description: cat.description || `${cat.name} transmissions from Sonic Velocity`,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/transmissions/category/${slug}`,
+      languages: Object.fromEntries(
+        i18n.locales.map((l) => [l, `${baseUrl}/${l}/transmissions/category/${slug}`])
+      ),
+    },
   };
 }
 

@@ -30,43 +30,84 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
   const dict = await getDictionary(locale);
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
   
+  const siteTitle = locale === 'jaksel' 
+    ? "Sonic Velo – Literally the Best AI Audio & Jaksel Vibes"
+    : `${dict.home.heroTitle1}${dict.home.heroTitle2}${dict.home.heroTitle3} – AI Audio Synthesis & Neural Culture`;
+
+  const regionalKeywords = [
+    "AI music Indonesia", "Jakarta Tech Scene", "Jaksel Slang", "South Jakarta AI", 
+    "Southeast Asia Audio Synthesis", "Asian Remix Culture", "TikTok Viral Songs Asia",
+    "Dangdut AI Remix", "Koplo Audio Engine", "Singapore AI Music", "Tokyo Neural Audio",
+    "Beijing Sound Systems"
+  ];
+
   return {
     metadataBase: new URL(baseUrl),
-    title: dict.home.heroTitle1 + " " + dict.home.heroTitle2 + " " + dict.home.heroTitle3 + " – AI Audio Synthesis",
+    title: {
+      default: siteTitle,
+      template: `%s | ${dict.common.brand}`,
+    },
     description: dict.home.heroSubtitle,
-    keywords: ["AI music", "TikTok Remix", "Dangdut Koplo", "Audio Synthesis", "Music Generation", "DJ TikTok", "AI Producer"],
+    keywords: [
+      "AI music", "TikTok Remix", "Dangdut Koplo", "Audio Synthesis", 
+      "Music Generation", "DJ TikTok", "AI Producer", "Neural Engineering",
+      ...regionalKeywords
+    ],
     alternates: {
-      canonical: `${i18n.defaultLocale === locale ? '/' : `/${locale}`}`,
+      canonical: `${baseUrl}/${locale}`,
       languages: Object.fromEntries(
-        i18n.locales.map((l) => [l, `/${l}`])
+        i18n.locales.map((l) => [l, `${baseUrl}/${l}`])
       ),
     },
     openGraph: {
       type: "website",
       url: `${baseUrl}/${locale}`,
-      title: "Velocity Blog – AI Audio Synthesis & Remix Culture",
+      title: siteTitle,
       description: dict.home.heroSubtitle,
-      images: ["/og-banner.jpg"],
+      siteName: dict.common.brand,
+      images: [
+        {
+          url: "/og-banner.jpg",
+          width: 1200,
+          height: 630,
+          alt: "Sonic Velocity – AI Music AI",
+        }
+      ],
+      locale: locale === 'id' ? 'id_ID' : locale === 'ja' ? 'ja_JP' : locale === 'zh' ? 'zh_CN' : 'en_US',
     },
     twitter: {
       card: "summary_large_image",
-      title: "Velocity Blog – AI Music Insights",
+      title: siteTitle,
       description: dict.home.heroSubtitle,
       site: "@sonicvelmusic",
       creator: "@sonicvelmusic",
+      images: ["/og-banner.jpg"],
     },
     robots: {
       index: true,
       follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
     },
     icons: {
       icon: "/icon.svg",
       shortcut: "/icon.svg",
       apple: "/icon.svg",
     },
+    verification: {
+      google: "google-site-verification-placeholder", // User should replace this
+    },
+    other: {
+      "geo.region": "ID-JK",
+      "geo.placename": "Jakarta",
+      "geo.position": "-6.2088;106.8456",
+      "ICBM": "-6.2088, 106.8456",
+    }
   };
 }
 

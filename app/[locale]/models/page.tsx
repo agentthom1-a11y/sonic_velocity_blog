@@ -8,10 +8,18 @@ import { SITE_CONFIG } from '@/blogData';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+
   return {
     title: `AI Models Index | ${SITE_CONFIG.brand}`,
     description: 'A comprehensive index of AI music models, synthesis engines, and production tools for the Asian music market.',
-    keywords: ['AI Models', 'Music AI', 'Suno AI', 'Udio AI', 'MiniMax', 'Stable Audio', 'Audio Synthesis', 'Music Trend Forecasting'],
+    keywords: ['AI Models', 'Music AI', 'Suno AI', 'Udio AI', 'MiniMax', 'Stable Audio', 'Audio Synthesis', 'Music Trend Forecasting', 'Jaksel AI', 'Indonesian AI Music'],
+    alternates: {
+      canonical: `${baseUrl}/${locale}/models`,
+      languages: Object.fromEntries(
+        i18n.locales.map((l) => [l, `${baseUrl}/${l}/models`])
+      ),
+    },
   };
 }
 
