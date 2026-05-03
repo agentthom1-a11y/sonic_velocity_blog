@@ -6,7 +6,7 @@ import { listCategories } from '@/lib/cms/categories';
 import { SITE_CONFIG } from '@/blogData';
 import { ArrowRight, Terminal } from 'lucide-react';
 import { getDictionary } from '@/lib/get-dictionary';
-import { Locale } from '@/lib/i18n-config';
+import { i18n, Locale } from '@/lib/i18n-config';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;

@@ -6,7 +6,7 @@ import { listPublishedPosts } from '@/lib/cms/posts';
 import { getCategoryBySlug, listCategories } from '@/lib/cms/categories';
 import { SITE_CONFIG } from '@/blogData';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
-import { Locale } from '@/lib/i18n-config';
+import { Locale, i18n } from '@/lib/i18n-config';
 
 export const revalidate = 60;
 
