@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { Link } from '@/components/Link';
 import { Terminal, Activity, Zap, Search, Cpu, Globe, ArrowRight } from 'lucide-react';
 import { getDictionary } from '@/lib/get-dictionary';
-import { Locale } from '@/lib/i18n-config';
+import { i18n, Locale } from '@/lib/i18n-config';
 import { SITE_CONFIG } from '@/blogData';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
