@@ -3,6 +3,10 @@ import { z } from 'zod';
 import { validateApiKey, hasScope } from '@/lib/cms/api-keys';
 import { createPost } from '@/lib/cms/posts';
 import { initDB } from '@/lib/db';
+import { getDefaultLocale, getSiteOrigin } from '@/lib/site-url';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 const PostItemSchema = z.object({
   title:             z.string().min(3).max(500),
@@ -89,7 +93,8 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const baseUrl = getSiteOrigin(req.nextUrl.origin);
+  const locale = getDefaultLocale();
 
   return NextResponse.json({
     collection,
@@ -99,6 +104,6 @@ export async function POST(req: NextRequest) {
     failed:      failCount,
     created_ids: createdIds,
     results,
-    admin_import_url: `${baseUrl}/admin/import`,
+    admin_import_url: `${baseUrl}/${locale}/admin/import`,
   }, { status: 207 });
 }

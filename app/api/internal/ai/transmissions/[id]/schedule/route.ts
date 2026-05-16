@@ -4,6 +4,9 @@ import { schedulePost } from '@/lib/cms/posts';
 import { initDB } from '@/lib/db';
 import { z } from 'zod';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 const Schema = z.object({
   scheduled_at: z.string().datetime(),
 });

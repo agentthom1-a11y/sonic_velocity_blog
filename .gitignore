@@ -33,6 +33,13 @@ data/
 *.db-wal
 *.db-shm
 
+# Local agent/deploy secrets
+agents/deploy/*.env
+agents/deploy/*.zip
+agents/deploy/*.log
+agents/hermes/ENV.hermes
+agents/hermes.zip
+
 # OS
 .DS_Store
 *.pem

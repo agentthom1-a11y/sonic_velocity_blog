@@ -3,6 +3,10 @@ import { z } from 'zod';
 import { validateApiKey, hasScope } from '@/lib/cms/api-keys';
 import { createPost, listPublishedPosts, adminListPosts, slugifyPost, uniqueSlug, autoPublishPost } from '@/lib/cms/posts';
 import { initDB } from '@/lib/db';
+import { getDefaultLocale, getSiteOrigin } from '@/lib/site-url';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 // ── Schema Validation ─────────────────────────────────────────────────────────
 const TransmissionSchema = z.object({
@@ -96,7 +100,8 @@ export async function POST(req: NextRequest) {
     aiPromptVersion: data.ai_prompt_version,
   }, 'ai_agent', keyRow.id.toString());
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
+  const baseUrl = getSiteOrigin(req.nextUrl.origin);
+  const locale = getDefaultLocale();
 
   return NextResponse.json({
     id:          post.id,
@@ -104,8 +109,8 @@ export async function POST(req: NextRequest) {
     status:      post.status,
     auto_published: isTrustedSource,
     published_at: post.publishedAt,
-    preview_url:  `${baseUrl}/transmissions/${post.slug}`,
-    admin_url:    `${baseUrl}/admin/transmissions/${post.id}`,
+    preview_url:  `${baseUrl}/${locale}/transmissions/${post.slug}`,
+    admin_url:    `${baseUrl}/${locale}/admin/transmissions/${post.id}`,
   }, { status: 201 });
 }
 

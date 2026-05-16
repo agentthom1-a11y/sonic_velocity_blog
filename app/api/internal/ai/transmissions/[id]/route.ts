@@ -4,6 +4,9 @@ import { adminGetPost, updatePost, publishPost, schedulePost } from '@/lib/cms/p
 import { initDB } from '@/lib/db';
 import { z } from 'zod';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 function authenticate(req: NextRequest) {
   const auth = req.headers.get('authorization') ?? '';
   if (!auth.startsWith('Bearer ')) return null;
