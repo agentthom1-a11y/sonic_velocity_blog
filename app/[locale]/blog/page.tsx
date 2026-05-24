@@ -1,17 +1,16 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   ArrowLeft, Search, Filter, Terminal, Activity, ArrowRight,
   User, Calendar, Clock, ChevronRight
 } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { BLOG_POSTS, CATEGORIES, SITE_CONFIG } from '@/blogData';
-import { BlogPost } from '@/types';
 
-export default function BlogListPage() {
+function BlogListContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('tag') || '');
@@ -117,5 +116,13 @@ export default function BlogListPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function BlogListPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-black flex items-center justify-center"><div className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></div></div>}>
+      <BlogListContent />
+    </Suspense>
   );
 }

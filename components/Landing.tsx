@@ -19,6 +19,9 @@ import {
   Clock,
   Filter,
   ArrowUpRight,
+  Database,
+  Globe2,
+  Music4,
   AudioLines as WaveIcon
 } from 'lucide-react';
 import { Link } from './Link';
@@ -128,7 +131,7 @@ const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
 
                <div className="flex items-center gap-12 py-10 border-y border-neutral-900">
                   <p className="max-w-md text-neutral-400 text-sm md:text-base font-mono leading-relaxed uppercase tracking-wider">
-                     {dict.home.heroSubtitle}
+                     Sonic Velocity tracks AI music models, Indonesian and Asian music trends, viral song patterns, momentum songs, and creator growth signals. Built for artists, producers, AI creators, music founders, and trend researchers.
                   </p>
                   <div className="hidden lg:flex flex-col gap-1 font-mono text-[10px] text-neutral-600 uppercase">
                      <span>{dict.home.operator}</span>
@@ -427,6 +430,65 @@ const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
 
          </div>
 
+         {/* WHAT SONIC VELOCITY TRACKS (SEO PILLARS) */}
+         {activeCategory === 'all' && !searchQuery && (
+           <section id="what-we-track" className="pt-24 mt-24 border-t border-neutral-900">
+             <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-12 flex items-center gap-3">
+               <Zap className="w-6 h-6 text-neutral-500" /> What Sonic Velocity Tracks
+             </h2>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+               
+               {/* 3. AI MUSIC INTELLIGENCE */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <Database className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">AI Music Intelligence</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Deep analysis into generative audio systems, prompt engineering, and neural audio culture.</p>
+                 <Link href={`/song-trend-signals`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">Read Signal Reports &rarr;</Link>
+               </div>
+   
+               {/* 4. INDONESIAN MUSIC TRENDS */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <Globe2 className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">Indonesian Music Trend Signals</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Tracking the fastest growing sounds, from Dangdut Koplo AI remixes to Jakarta underground waves.</p>
+                 <Link href={`/music-trends/indonesia/2026`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">View 2026 Forecast &rarr;</Link>
+               </div>
+   
+               {/* 5. ASIAN MUSIC TRENDS */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <Activity className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">Asian Music Trend Signals</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Cross-border virality, regional platform algorithms, and the rise of Pan-Asian pop momentum.</p>
+                 <Link href={`/music-trends/asia/2026`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">View Asia Report &rarr;</Link>
+               </div>
+   
+               {/* 6. VIRAL SONG PATTERN ANALYSIS */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <Activity className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">Viral Song Pattern Analysis</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Deconstructing the DNA of TikTok hits, YouTube Shorts spikes, and Spotify momentum vectors.</p>
+                 <Link href={`/song-trend-signals`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">Learn the Framework &rarr;</Link>
+               </div>
+   
+               {/* 7. AI AUDIO SYNTHESIS MODELS */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <Music4 className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">AI Audio Synthesis Models</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Tracking Suno, Udio, Stable Audio, and the expanding landscape of text-to-music generation tools.</p>
+                 <Link href={`/glossary/ai-audio-synthesis`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">Define Synthesis &rarr;</Link>
+               </div>
+   
+               {/* 8. MOMENTUM SONGS */}
+               <div className="p-8 border border-neutral-900 bg-neutral-950/50 hover:bg-neutral-900 transition-colors group block">
+                 <ArrowUpRight className="w-8 h-8 text-neutral-600 mb-6 group-hover:text-white transition-colors" />
+                 <h3 className="text-lg font-black text-white uppercase tracking-widest mb-4">Momentum Songs</h3>
+                 <p className="text-xs font-mono text-neutral-500 leading-relaxed mb-6">Identifying tracks that break containment and create sustained cultural feedback loops.</p>
+                 <Link href={`/glossary/momentum-song`} className="text-[10px] font-bold text-white uppercase tracking-widest group-hover:underline">What is a Momentum Song? &rarr;</Link>
+               </div>
+             </div>
+           </section>
+         )}
+
          {/* CATEGORY RAILS / FEATURED RAILS */}
          {activeCategory === 'all' && !searchQuery && (
            <section className="grid grid-cols-1 md:grid-cols-4 gap-8 pt-24 mt-24 border-t border-neutral-900">
@@ -524,67 +586,6 @@ const Landing: React.FC<LandingProps> = ({ dict, locale }) => {
 
       </main>
 
-      {/* REBRANDED FOOTER */}
-      <footer className="py-20 border-t border-neutral-900 bg-black relative z-10">
-        <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
-               <div className="md:col-span-1 space-y-6 text-left">
-                  <div>
-                    <h4 className="text-sm font-black text-white uppercase tracking-widest mb-1">Sonic Velocity</h4>
-                    <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-widest leading-loose">
-                       Advancing Neural Audio Systems & Cultural Engineering.
-                    </p>
-                  </div>
-                  <div className="flex gap-4">
-                     {[
-                       { Icon: Twitter, href: SITE_CONFIG.socials.twitter },
-                       { Icon: Instagram, href: SITE_CONFIG.socials.instagram },
-                       { Icon: Music, href: "#" }
-                     ].map((item, i) => (
-                        <a key={i} href={item.href} target="_blank" rel="noopener noreferrer" className="w-8 h-8 flex items-center justify-center border border-neutral-800 hover:border-white hover:text-white text-neutral-600 transition-all">
-                           <item.Icon className="w-4 h-4" />
-                        </a>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="space-y-4 text-left">
-                  <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Publication</h5>
-                  <div className="flex flex-col gap-2">
-                     {CATEGORIES.map(category => (
-                        <Link key={category.slug} href="/blog" className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{category.name}</Link>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="space-y-4 text-left">
-                  <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Resources</h5>
-                  <div className="flex flex-col gap-2">
-                     {['Studio', 'Systems', 'Pricing', 'API'].map(item => (
-                        <Link key={item} href={`/${item.toLowerCase() === 'systems' ? 'showcase' : item.toLowerCase()}`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{item}</Link>
-                     ))}
-                  </div>
-               </div>
-
-               <div className="space-y-4 text-left">
-                  <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Company</h5>
-                  <div className="flex flex-col gap-2">
-                     {['About', 'Privacy', 'Terms', 'Status'].map(item => (
-                        <Link key={item} href={`/${item.toLowerCase()}`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{item}</Link>
-                     ))}
-                  </div>
-               </div>
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 pt-12 border-t border-neutral-900 font-mono text-[9px] text-neutral-700 uppercase tracking-[0.3em]">
-               <span>OPERATIONAL_STATUS: OPTIMAL</span>
-               <span>VELOCITY SYSTEMS © 2024. ALL RIGHTS RESERVED.</span>
-               <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 hover:text-white transition-colors">
-                  Return To Top <ArrowUpRight className="w-3 h-3" />
-               </button>
-            </div>
-        </div>
-      </footer>
     </div>
   );
 };

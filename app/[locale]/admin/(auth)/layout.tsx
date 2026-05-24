@@ -17,7 +17,7 @@ export default async function AdminAuthLayout({ children, params }: { children: 
   const token = jar.get('sv_admin')?.value;
   const admin = token ? verifyAdminToken(token) : null;
 
-  if (!admin) redirect(`/${locale}/admin/login`);
+  if (!admin) redirect(`/admin/login`);
 
   return (
     <div className="min-h-screen bg-black text-neutral-300 font-mono">

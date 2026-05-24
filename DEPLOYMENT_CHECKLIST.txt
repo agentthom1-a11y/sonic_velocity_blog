@@ -1,0 +1,175 @@
+╔════════════════════════════════════════════════════════════════╗
+║         SONICVELO BLOG - DEPLOYMENT CHECKLIST                  ║
+║                                                                ║
+║  Package: sonicvelo-hostinger-deploy.zip (339.63 MB)          ║
+║  Status: ✅ READY FOR DEPLOYMENT                              ║
+╚════════════════════════════════════════════════════════════════╝
+
+PRE-DEPLOYMENT (COMPLETED ✅)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☑ Local API tests passed
+☑ Production build completed
+☑ Database initialized (19 test posts)
+☑ API keys configured
+☑ Deployment package created
+☑ Documentation prepared
+
+DEPLOYMENT STEPS (DO NOW 🚀)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: LOGIN TO HOSTINGER
+□ Go to: https://hpanel.hostinger.com
+□ Login with your credentials
+□ Select your hosting account
+
+STEP 2: UPLOAD PACKAGE
+□ Open File Manager
+□ Navigate to: public_html (or your app directory)
+□ Click "Upload" button
+□ Select: sonicvelo-hostinger-deploy.zip
+□ Wait for upload to complete (339.63 MB)
+□ Right-click zip file → "Extract"
+□ Confirm extraction
+
+STEP 3: CONFIGURE ENVIRONMENT
+□ Open SSH Terminal (or use SSH client)
+□ Navigate to app directory:
+  cd /home/your-username/public_html
+  
+□ Edit .env.local:
+  nano .env.local
+  
+□ Update these values:
+  - NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+  - ALLOWED_ORIGIN=https://yourdomain.com
+  - ADMIN_PASSWORD=your-secure-password
+  
+□ Generate new SESSION_SECRET:
+  node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+  
+□ Paste the generated secret into .env.local
+□ Save and exit (Ctrl+X, Y, Enter)
+
+STEP 4: INSTALL & START
+□ Install dependencies:
+  npm install --production
+  
+□ Start with PM2 (recommended):
+  npm install -g pm2
+  pm2 start server.js --name sonicvelo-blog
+  pm2 save
+  pm2 startup
+  
+□ OR start normally:
+  npm start
+
+POST-DEPLOYMENT TESTING (VERIFY ✓)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TEST 1: HEALTH CHECK
+□ Run: curl https://yourdomain.com/api/health
+□ Expected: {"ok":true,"service":"sonicvelo-blog",...}
+
+TEST 2: ADMIN ACCESS
+□ Visit: https://yourdomain.com/en/admin/login
+□ Login with ADMIN_EMAIL and ADMIN_PASSWORD
+□ Verify dashboard loads
+
+TEST 3: BLOG POSTS
+□ Visit: https://yourdomain.com/en/transmissions
+□ Verify posts are visible
+□ Click on a post to view details
+
+TEST 4: CREATE API KEY
+□ In admin, go to: Settings → API Keys
+□ Create new API key
+□ Test with curl:
+  curl -X POST https://yourdomain.com/api/internal/ai/transmissions \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -H "Content-Type: application/json" \
+    -d '{"title":"Test","excerpt":"Test","content_markdown":"# Test"}'
+
+SECURITY HARDENING (IMPORTANT 🔐)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ Change default admin password
+□ Generate new SESSION_SECRET for production
+□ Enable HTTPS/SSL in Hostinger control panel
+□ Force HTTPS redirects
+□ Set file permissions:
+  chmod 644 data/cms.db
+  chmod 755 data
+□ Remove test posts (optional):
+  - Login to admin
+  - Delete test posts created during testing
+□ Create production API keys (delete test keys)
+□ Configure firewall rules (if available)
+□ Enable security headers
+
+MONITORING & MAINTENANCE (ONGOING 📊)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+□ Check PM2 status: pm2 status
+□ View logs: pm2 logs sonicvelo-blog
+□ Monitor disk space: df -h
+□ Setup database backups:
+  cp data/cms.db data/cms.db.backup.$(date +%Y%m%d)
+□ Review error logs weekly
+□ Update dependencies monthly: npm update
+□ Vacuum database monthly:
+  sqlite3 data/cms.db "VACUUM;"
+
+TROUBLESHOOTING (IF NEEDED 🔧)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+App not starting?
+□ Check logs: pm2 logs sonicvelo-blog
+□ Verify Node.js version: node --version (need 18+)
+□ Check .env.local configuration
+□ Restart: pm2 restart sonicvelo-blog
+
+Database errors?
+□ Check file exists: ls -la data/cms.db
+□ Fix permissions: chmod 644 data/cms.db
+□ Check integrity: sqlite3 data/cms.db "PRAGMA integrity_check;"
+
+Can't access admin?
+□ Verify ADMIN_EMAIL and ADMIN_PASSWORD in .env.local
+□ Clear browser cache
+□ Check app is running: pm2 status
+
+Port already in use?
+□ Find process: lsof -i :3000
+□ Kill process: kill -9 PID
+□ Or restart: pm2 restart sonicvelo-blog
+
+DOCUMENTATION REFERENCE 📚
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- READY_TO_DEPLOY.md      → Quick deployment guide
+- DEPLOYMENT_GUIDE.md      → Complete deployment instructions
+- DEPLOYMENT_SUMMARY.md    → Full summary of everything
+- TEST_RESULTS.md          → Detailed test results
+- QUICK_START.md           → 5-minute quick start
+- HOSTINGER_DEPLOYMENT_REPORT.md → Deployment report
+
+SUPPORT RESOURCES 📞
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- Hostinger Support: https://www.hostinger.com/support
+- Hostinger Docs: https://support.hostinger.com
+- Next.js Docs: https://nextjs.org/docs
+- PM2 Docs: https://pm2.keymetrics.io/docs
+
+CONFIGURATION SUMMARY 🔑
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Hostinger API Key: EkQhe4r5qUx2NtA... ✅
+SonicVelo API Key: svk_e13876d2b4f... ✅
+Deployment Package: sonicvelo-hostinger-deploy.zip ✅
+Package Size: 339.63 MB
+Build Status: ✅ COMPLETE
+Test Status: ✅ ALL PASSED
+
+╔════════════════════════════════════════════════════════════════╗
+║  🎉 READY TO DEPLOY - FOLLOW THE STEPS ABOVE!                 ║
+╚════════════════════════════════════════════════════════════════╝
+
+Created: 2026-05-16
+Version: 1.0.0
+Status: 🟢 PRODUCTION READY

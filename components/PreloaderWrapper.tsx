@@ -8,26 +8,26 @@ export default function PreloaderWrapper({ children }: { children: React.ReactNo
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <AnimatePresence mode="wait">
-      {isLoading ? (
-        <motion.div
-          key="preloader"
-          exit={{ opacity: 0, scale: 0.9, filter: 'blur(10px)' }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-        >
-          <Preloader onComplete={() => setIsLoading(false)} />
-        </motion.div>
-      ) : (
-        <motion.div 
-          key="content"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.4 }}
-          className="flex-1 flex flex-col"
-        >
-          {children}
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div className="relative flex-1 flex flex-col w-full min-h-screen">
+      {/* 
+        We unconditionally render children so search engine crawlers 
+        and initial SSR HTML get the full page content immediately.
+      */}
+      {children}
+      
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div
+            key="preloader-overlay"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, filter: 'blur(10px)', pointerEvents: 'none' }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            className="fixed inset-0 z-[9999] bg-black flex flex-col"
+          >
+            <Preloader onComplete={() => setIsLoading(false)} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

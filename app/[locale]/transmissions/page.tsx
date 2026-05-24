@@ -92,7 +92,7 @@ export default async function TransmissionsPage({
           </div>
           
           <div className="flex flex-col gap-4 w-full md:w-auto">
-             <form action={`/${locale}/transmissions`} method="GET" className="relative group">
+             <form action={`/transmissions`} method="GET" className="relative group">
                <input 
                  type="text" 
                  name="q"

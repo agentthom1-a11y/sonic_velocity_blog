@@ -8,6 +8,27 @@ import { getDefaultLocale, getSiteOrigin } from '@/lib/site-url';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// ── CORS Headers ──────────────────────────────────────────────────────────────
+function corsHeaders(origin?: string | null) {
+  const allowedOrigins = process.env.ALLOWED_ORIGIN?.split(',') || ['*'];
+  const allowOrigin = origin && allowedOrigins.includes(origin) ? origin : '*';
+  
+  return {
+    'Access-Control-Allow-Origin': allowOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+    'Access-Control-Max-Age': '86400',
+  };
+}
+
+// ── OPTIONS Handler (Preflight) ───────────────────────────────────────────────
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(req.headers.get('origin')),
+  });
+}
+
 // ── Schema Validation ─────────────────────────────────────────────────────────
 const TransmissionSchema = z.object({
   title:             z.string().min(3).max(500),
@@ -42,26 +63,40 @@ function authenticate(req: NextRequest) {
 
 // ── POST /api/internal/ai/transmissions ───────────────────────────────────────
 export async function POST(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const headers = corsHeaders(origin);
+
   // Auth
   const keyRow = authenticate(req);
   if (!keyRow) {
-    return NextResponse.json({ error: 'Unauthorized', code: 'INVALID_API_KEY' }, { status: 401 });
+    return NextResponse.json(
+      { error: 'Unauthorized', code: 'INVALID_API_KEY' }, 
+      { status: 401, headers }
+    );
   }
   if (!hasScope(keyRow, 'write')) {
-    return NextResponse.json({ error: 'Forbidden', code: 'MISSING_SCOPE_WRITE' }, { status: 403 });
+    return NextResponse.json(
+      { error: 'Forbidden', code: 'MISSING_SCOPE_WRITE' }, 
+      { status: 403, headers }
+    );
   }
 
   // Parse body
   let body: unknown;
   try { body = await req.json(); }
-  catch { return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }); }
+  catch { 
+    return NextResponse.json(
+      { error: 'Invalid JSON body' }, 
+      { status: 400, headers }
+    ); 
+  }
 
   const parsed = TransmissionSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({
       error: 'Validation failed',
       details: parsed.error.flatten().fieldErrors,
-    }, { status: 422 });
+    }, { status: 422, headers });
   }
 
   const data = parsed.data;
@@ -111,14 +146,27 @@ export async function POST(req: NextRequest) {
     published_at: post.publishedAt,
     preview_url:  `${baseUrl}/${locale}/transmissions/${post.slug}`,
     admin_url:    `${baseUrl}/${locale}/admin/transmissions/${post.id}`,
-  }, { status: 201 });
+  }, { status: 201, headers });
 }
 
 // ── GET /api/internal/ai/transmissions?status=draft ───────────────────────────
 export async function GET(req: NextRequest) {
+  const origin = req.headers.get('origin');
+  const headers = corsHeaders(origin);
+
   const keyRow = authenticate(req);
-  if (!keyRow) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  if (!hasScope(keyRow, 'write')) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!keyRow) {
+    return NextResponse.json(
+      { error: 'Unauthorized' }, 
+      { status: 401, headers }
+    );
+  }
+  if (!hasScope(keyRow, 'write')) {
+    return NextResponse.json(
+      { error: 'Forbidden' }, 
+      { status: 403, headers }
+    );
+  }
 
   const { searchParams } = new URL(req.url);
   const status = searchParams.get('status') ?? undefined;
@@ -128,5 +176,8 @@ export async function GET(req: NextRequest) {
   initDB();
   const posts = adminListPosts({ status, limit, offset });
 
-  return NextResponse.json({ posts, meta: { limit, offset, count: posts.length } });
+  return NextResponse.json(
+    { posts, meta: { limit, offset, count: posts.length } },
+    { headers }
+  );
 }

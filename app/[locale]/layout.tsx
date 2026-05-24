@@ -7,6 +7,8 @@ import Header from "@/components/Header";
 import PreloaderWrapper from "@/components/PreloaderWrapper";
 import { AIProducerBotWrapper } from "@/components/AIProducerBotWrapper";
 import ClientBackgroundEffects from "@/components/ClientBackgroundEffects";
+import { Footer } from "@/components/Footer";
+import { OrganizationSchema, WebSiteSchema } from "@/components/Schema";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -28,7 +30,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
   const { locale } = await params;
   const dict = await getDictionary(locale);
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://transmissions.sonicvelocitymusic.com';
   
   const siteTitle = locale === 'jaksel' 
     ? "Sonic Velo – Literally the Best AI Audio & Jaksel Vibes"
@@ -121,7 +123,7 @@ export default async function RootLayout({
   const { locale } = await params;
   const dict = await getDictionary(locale);
   const direction = i18n.directions[locale] || 'ltr';
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sonicvelocitymusic.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://transmissions.sonicvelocitymusic.com';
 
   const jsonLd = [
     {
@@ -157,10 +159,8 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={direction} suppressHydrationWarning>
       <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <OrganizationSchema baseUrl={baseUrl} />
+        <WebSiteSchema baseUrl={baseUrl} locale={locale} />
       </head>
       <body className={`${manrope.variable} ${jetbrainsMono.variable} antialiased min-h-screen relative flex flex-col`} suppressHydrationWarning>
         <AppProvider>
@@ -174,6 +174,7 @@ export default async function RootLayout({
                 {children}
               </main>
 
+              <Footer locale={locale} />
               <AIProducerBotWrapper />
             </div>
           </PreloaderWrapper>

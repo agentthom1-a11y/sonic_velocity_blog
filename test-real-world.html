@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonicVelo API - Real World Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success {
+            border-left: 4px solid #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-left: 4px solid #dc3545;
+            background: #f8d7da;
+        }
+        .info {
+            border-left: 4px solid #17a2b8;
+            background: #d1ecf1;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .status.success {
+            background: #28a745;
+            color: white;
+        }
+        .status.pending {
+            background: #ffc107;
+            color: #333;
+        }
+        .config {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 SonicVelo API - Real World Test</h1>
+        <p class="subtitle">Test the CORS-enabled API from your browser (simulating external server)</p>
+
+        <div class="config">
+            <label for="apiBase">API Base URL:</label>
+            <input type="text" id="apiBase" value="http://localhost:3000" placeholder="https://yourdomain.com">
+            
+            <label for="apiKey">API Key:</label>
+            <input type="text" id="apiKey" value="svk_e13876d2b4f4c5e4dadc2cb4a06b6a6ef931d25f" placeholder="svk_...">
+        </div>
+
+        <!-- Test 1: Health Check -->
+        <div class="test-section">
+            <h3>1️⃣ Health Check <span class="status pending" id="status1">Not Tested</span></h3>
+            <p>Test if the API is accessible from this browser (simulating external origin)</p>
+            <button onclick="testHealth()">Run Health Check</button>
+            <div id="result1" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Test 2: Create Post -->
+        <div class="test-section">
+            <h3>2️⃣ Create Blog Post <span class="status pending" id="status2">Not Tested</span></h3>
+            <p>Create a new blog post via API from browser</p>
+            
+            <label for="postTitle">Post Title:</label>
+            <input type="text" id="postTitle" value="Test Post from Browser" placeholder="Enter post title">
+            
+            <label for="postExcerpt">Excerpt:</label>
+            <input type="text" id="postExcerpt" value="This post was created from a browser to test CORS" placeholder="Enter excerpt">
+            
+            <label for="postContent">Content (Markdown):</label>
+            <textarea id="postContent"># Test Post from Browser
+
+This post was created directly from a web browser to test the CORS-enabled API.
+
+## Features Tested
+
+- ✅ CORS headers
+- ✅ Authentication
+- ✅ POST request from browser
+- ✅ JSON payload
+
+## Result
+
+If you're reading this, the API is working perfectly from any origin! 🎉</textarea>
+            
+            <button onclick="testCreatePost()">Create Post</button>
+            <div id="result2" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Test 3: List Posts -->
+        <div class="test-section">
+            <h3>3️⃣ List Posts <span class="status pending" id="status3">Not Tested</span></h3>
+            <p>Retrieve list of posts via API</p>
+            <button onclick="testListPosts()">List Posts</button>
+            <div id="result3" class="result" style="display:none;"></div>
+        </div>
+
+        <!-- Test 4: Full Integration Test -->
+        <div class="test-section">
+            <h3>4️⃣ Full Integration Test <span class="status pending" id="status4">Not Tested</span></h3>
+            <p>Run all tests in sequence</p>
+            <button onclick="runAllTests()">Run All Tests</button>
+            <div id="result4" class="result" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        function getConfig() {
+            return {
+                apiBase: document.getElementById('apiBase').value,
+                apiKey: document.getElementById('apiKey').value
+            };
+        }
+
+        function showResult(testNum, content, isSuccess) {
+            const resultDiv = document.getElementById(`result${testNum}`);
+            const statusSpan = document.getElementById(`status${testNum}`);
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+            resultDiv.textContent = content;
+            
+            statusSpan.className = `status ${isSuccess ? 'success' : 'error'}`;
+            statusSpan.textContent = isSuccess ? '✅ Passed' : '❌ Failed';
+        }
+
+        async function testHealth() {
+            const { apiBase } = getConfig();
+            const resultDiv = document.getElementById('result1');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Testing...';
+
+            try {
+                const response = await fetch(`${apiBase}/api/health`);
+                const data = await response.json();
+                
+                const result = `✅ Success!
+
+Status: ${response.status}
+CORS Header: ${response.headers.get('access-control-allow-origin')}
+
+Response:
+${JSON.stringify(data, null, 2)}`;
+                
+                showResult(1, result, true);
+            } catch (error) {
+                showResult(1, `❌ Error: ${error.message}`, false);
+            }
+        }
+
+        async function testCreatePost() {
+            const { apiBase, apiKey } = getConfig();
+            const title = document.getElementById('postTitle').value;
+            const excerpt = document.getElementById('postExcerpt').value;
+            const content = document.getElementById('postContent').value;
+
+            const resultDiv = document.getElementById('result2');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Creating post...';
+
+            try {
+                const response = await fetch(`${apiBase}/api/internal/ai/transmissions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        excerpt: excerpt,
+                        content_markdown: content,
+                        category: 'Testing',
+                        tags: ['browser-test', 'cors', 'api'],
+                        author_name: 'Browser Test',
+                        source_type: 'manual'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const result = `✅ Post Created Successfully!
+
+Status: ${response.status}
+CORS Header: ${response.headers.get('access-control-allow-origin')}
+
+Response:
+${JSON.stringify(data, null, 2)}
+
+Preview URL: ${data.preview_url}
+Admin URL: ${data.admin_url}`;
+                    
+                    showResult(2, result, true);
+                } else {
+                    showResult(2, `❌ Error: ${response.status}\n\n${JSON.stringify(data, null, 2)}`, false);
+                }
+            } catch (error) {
+                showResult(2, `❌ Error: ${error.message}`, false);
+            }
+        }
+
+        async function testListPosts() {
+            const { apiBase, apiKey } = getConfig();
+            const resultDiv = document.getElementById('result3');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Fetching posts...';
+
+            try {
+                const response = await fetch(`${apiBase}/api/internal/ai/transmissions?limit=5`, {
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    const result = `✅ Posts Retrieved Successfully!
+
+Status: ${response.status}
+CORS Header: ${response.headers.get('access-control-allow-origin')}
+Posts Found: ${data.posts?.length || 0}
+
+Response:
+${JSON.stringify(data, null, 2)}`;
+                    
+                    showResult(3, result, true);
+                } else {
+                    showResult(3, `❌ Error: ${response.status}\n\n${JSON.stringify(data, null, 2)}`, false);
+                }
+            } catch (error) {
+                showResult(3, `❌ Error: ${error.message}`, false);
+            }
+        }
+
+        async function runAllTests() {
+            const resultDiv = document.getElementById('result4');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = 'Running all tests...\n\n';
+
+            let allPassed = true;
+            let log = '';
+
+            // Test 1: Health Check
+            log += '1️⃣ Testing Health Check...\n';
+            try {
+                const response = await fetch(`${getConfig().apiBase}/api/health`);
+                const data = await response.json();
+                if (response.ok) {
+                    log += '   ✅ Health check passed\n\n';
+                } else {
+                    log += '   ❌ Health check failed\n\n';
+                    allPassed = false;
+                }
+            } catch (error) {
+                log += `   ❌ Error: ${error.message}\n\n`;
+                allPassed = false;
+            }
+
+            // Test 2: Create Post
+            log += '2️⃣ Testing Create Post...\n';
+            try {
+                const response = await fetch(`${getConfig().apiBase}/api/internal/ai/transmissions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getConfig().apiKey}`
+                    },
+                    body: JSON.stringify({
+                        title: 'Integration Test Post',
+                        excerpt: 'Created during full integration test',
+                        content_markdown: '# Integration Test\n\nThis post was created during the full integration test.'
+                    })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    log += `   ✅ Post created (ID: ${data.id})\n\n`;
+                } else {
+                    log += `   ❌ Post creation failed: ${response.status}\n\n`;
+                    allPassed = false;
+                }
+            } catch (error) {
+                log += `   ❌ Error: ${error.message}\n\n`;
+                allPassed = false;
+            }
+
+            // Test 3: List Posts
+            log += '3️⃣ Testing List Posts...\n';
+            try {
+                const response = await fetch(`${getConfig().apiBase}/api/internal/ai/transmissions?limit=3`, {
+                    headers: {
+                        'Authorization': `Bearer ${getConfig().apiKey}`
+                    }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    log += `   ✅ Posts retrieved (${data.posts?.length || 0} posts)\n\n`;
+                } else {
+                    log += `   ❌ List posts failed: ${response.status}\n\n`;
+                    allPassed = false;
+                }
+            } catch (error) {
+                log += `   ❌ Error: ${error.message}\n\n`;
+                allPassed = false;
+            }
+
+            // Summary
+            log += '═'.repeat(60) + '\n';
+            if (allPassed) {
+                log += '🎉 ALL TESTS PASSED!\n\n';
+                log += '✅ Health Check: Working\n';
+                log += '✅ Create Post: Working\n';
+                log += '✅ List Posts: Working\n\n';
+                log += '📝 The API is fully functional from any origin!';
+            } else {
+                log += '⚠️ SOME TESTS FAILED\n\n';
+                log += 'Please check the individual test results above.';
+            }
+
+            showResult(4, log, allPassed);
+        }
+
+        // Auto-run health check on page load
+        window.addEventListener('load', () => {
+            setTimeout(testHealth, 500);
+        });
+    </script>
+</body>
+</html>

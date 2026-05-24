@@ -27,7 +27,7 @@ export default function AdminLoginPage() {
         const d = await res.json();
         setError(d.error || 'Login failed');
       } else {
-        router.push(`/${locale}/admin`);
+        router.push(`/admin`);
         router.refresh();
       }
     } catch {
