@@ -53,3 +53,6 @@ agents/hermes.zip
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore deployment archive zip files
+*.zip
