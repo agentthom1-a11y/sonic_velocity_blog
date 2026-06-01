@@ -1,26 +1,29 @@
-'use client';
-
 import { ShoppingBag, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale } from '@/lib/i18n-config';
 
-export default function MerchPage() {
+export default async function MerchPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+
   return (
     <div className="max-w-6xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out] text-neutral-300">
       <Link href="/" className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest mb-12 hover:text-white transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Return to Base
+        <ArrowLeft className="w-4 h-4" /> {dict.common.returnToBase}
       </Link>
 
       <div className="mb-16 flex flex-col md:flex-row justify-between items-end gap-6">
           <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-neutral-800 bg-neutral-900/50 rounded-full mb-6">
                   <ShoppingBag className="w-3 h-3 text-neutral-400" />
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400">Supply Depot</span>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400">{dict.common.supplyDepot}</span>
               </div>
-              <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">Merch</h1>
-              <p className="font-mono text-xs text-neutral-500 uppercase tracking-widest">Official Velocity Hardware & Apparel</p>
+              <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">{dict.common.merch}</h1>
+              <p className="font-mono text-xs text-neutral-500 uppercase tracking-widest">{dict.common.merchSub}</p>
           </div>
           <div className="text-right hidden md:block">
-               <p className="font-mono text-xs text-neutral-600 mb-2">STATUS: RESTOCKED</p>
+               <p className="font-mono text-xs text-neutral-600 mb-2">{dict.common.restocked}</p>
                <div className="w-32 h-1 bg-neutral-800 rounded-full overflow-hidden">
                   <div className="w-full h-full bg-green-500"></div>
                </div>

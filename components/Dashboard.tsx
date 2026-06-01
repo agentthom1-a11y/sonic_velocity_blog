@@ -3,10 +3,28 @@
 import React from 'react';
 import { Activity, ArrowRight, Clock, CreditCard, HardDrive, LayoutGrid, MessageSquare, Music, Play, Plus, Settings, User, Zap, LogOut, Moon, Sun, ChevronLeft, ChevronRight, AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { useAppContext } from './AppContext';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  dict?: any;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ dict }) => {
+  const t = (key: string, fallback: string) => {
+    if (!dict) return fallback;
+    const parts = key.split('.');
+    let cur = dict;
+    for (const part of parts) {
+      if (cur && cur[part] !== undefined) {
+        cur = cur[part];
+      } else {
+        return fallback;
+      }
+    }
+    return cur || fallback;
+  };
+
   const { theme, toggleTheme, userTier, handleSignOut, jobs } = useAppContext();
   const router = useRouter();
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -43,13 +61,13 @@ const Dashboard: React.FC = () => {
          <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 border border-green-900/30 bg-green-950/10 rounded-full mb-4">
                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-green-400">Session Active</span>
+               <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-green-400">{t('common.sessionActive', 'Session Active')}</span>
             </div>
             <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">
-               Operator <span className="text-neutral-600">Dashboard</span>
+               Operator <span className="text-neutral-600">{t('common.dashboard', 'Dashboard')}</span>
             </h1>
             <p className="font-mono text-xs text-neutral-500 mt-2 uppercase tracking-wider">
-               Welcome back, User_01. Systems nominal.
+               {t('common.welcomeBack', 'Welcome back, User_01. Systems nominal.')}
             </p>
          </div>
          
@@ -58,13 +76,13 @@ const Dashboard: React.FC = () => {
                href="/pricing"
                className="px-6 py-3 border border-neutral-800 text-white font-bold uppercase tracking-wider text-xs hover:bg-neutral-900 transition-colors flex items-center gap-2"
             >
-               <CreditCard className="w-4 h-4" /> Upgrade Plan
+               <CreditCard className="w-4 h-4" /> {t('common.upgradePlan', 'Upgrade Plan')}
             </Link>
             <Link 
                href="/studio"
                className="px-6 py-3 bg-white text-black font-bold uppercase tracking-wider text-xs hover:bg-neutral-200 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
-               <Plus className="w-4 h-4" /> New Project
+               <Plus className="w-4 h-4" /> {t('common.newProject', 'New Project')}
             </Link>
          </div>
       </div>
@@ -77,9 +95,9 @@ const Dashboard: React.FC = () => {
                <div className="w-10 h-10 bg-neutral-900 flex items-center justify-center border border-neutral-800">
                   <Zap className="w-5 h-5 text-yellow-500" />
                </div>
-               <span className="text-[10px] font-mono text-neutral-500 uppercase">Resets in 12 Days</span>
+               <span className="text-[10px] font-mono text-neutral-500 uppercase">{t('common.resetsIn12Days', 'Resets in 12 Days')}</span>
             </div>
-            <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">Compute Credits</h3>
+            <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">{t('common.computeCredits', 'Compute Credits')}</h3>
             <div className="flex items-baseline gap-2 mb-4">
                <span className="text-3xl font-bold text-white">
                   {userTier === 'free' ? '50' : userTier === 'premium' ? '840' : 'UNLMTD'}
@@ -101,7 +119,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 <span className="text-[10px] font-mono text-neutral-500 uppercase">Cloud Node SG_1</span>
              </div>
-             <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">Storage Allocated</h3>
+             <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">{t('common.storageAllocated', 'Storage Allocated')}</h3>
              <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-3xl font-bold text-white">2.4</span>
                 <span className="text-sm text-neutral-600 font-mono">GB / {userTier === 'free' ? '5.0' : '100'} GB</span>
@@ -120,17 +138,17 @@ const Dashboard: React.FC = () => {
                 <span className={`px-2 py-1 border text-[9px] font-bold uppercase ${
                     userTier === 'free' ? 'bg-neutral-900 border-neutral-800 text-neutral-500' : 'bg-green-900/20 border-green-900 text-green-500'
                 }`}>
-                   {userTier === 'free' ? 'Standard' : 'Active'}
+                   {userTier === 'free' ? t('common.standard', 'Standard') : t('common.active', 'Active')}
                 </span>
              </div>
-             <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">Current License</h3>
+             <h3 className="text-sm font-mono text-neutral-400 uppercase tracking-widest mb-1">{t('common.currentLicense', 'Current License')}</h3>
              <div className="flex items-baseline gap-2 mb-4">
                 <span className={`text-xl font-bold uppercase ${getTierColor()}`}>
                    {getTierName()}
                 </span>
              </div>
              <Link href="/pricing" className="text-[10px] font-bold uppercase tracking-widest text-white flex items-center gap-1 hover:text-green-400 transition-colors">
-                Upgrade License <ArrowRight className="w-3 h-3" />
+                {t('common.upgradeLicense', 'Upgrade License')} <ArrowRight className="w-3 h-3" />
              </Link>
          </div>
       </div>
@@ -140,11 +158,11 @@ const Dashboard: React.FC = () => {
          <div className="lg:col-span-2">
             <div className="flex items-center justify-between mb-6 border-b border-neutral-800 pb-4">
                <h2 className="text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-neutral-500" /> Generation History
+                  <Clock className="w-5 h-5 text-neutral-500" /> {t('common.generationHistory', 'Generation History')}
                </h2>
                <div className="flex items-center gap-4">
                   <span className="text-[10px] font-mono text-neutral-500 uppercase">
-                     Total: {jobs.length} Units
+                     {t('common.total', 'Total')}: {jobs.length} {t('common.units', 'Units')}
                   </span>
                </div>
             </div>
@@ -244,15 +262,15 @@ const Dashboard: React.FC = () => {
                         <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>
                      </div>
                   </div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">No Active Logs</h3>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-2">{t('common.noActiveLogs', 'No Active Logs')}</h3>
                   <p className="text-[10px] font-mono text-neutral-500 uppercase tracking-widest">
-                     Your atmospheric synthesis history is currently empty.
+                     {t('common.historyEmpty', 'Your atmospheric synthesis history is currently empty.')}
                   </p>
                   <Link 
                      href="/studio"
                      className="mt-6 inline-block px-4 py-2 bg-neutral-900 border border-neutral-800 text-[10px] font-bold text-white uppercase tracking-widest hover:bg-neutral-800 transition-colors"
                   >
-                     Initiate Sequence
+                     {t('common.initiateSequence', 'Initiate Sequence')}
                   </Link>
                </div>
             )}
@@ -262,7 +280,7 @@ const Dashboard: React.FC = () => {
          <div>
             <div className="flex items-center justify-between mb-6 border-b border-neutral-800 pb-4">
                <h2 className="text-lg font-bold text-white uppercase tracking-wider flex items-center gap-2">
-                  <MessageSquare className="w-5 h-5 text-neutral-500" /> System Feed
+                  <MessageSquare className="w-5 h-5 text-neutral-500" /> {t('common.systemFeed', 'System Feed')}
                </h2>
             </div>
 
@@ -291,7 +309,7 @@ const Dashboard: React.FC = () => {
             <div className="mt-12 p-6 border border-dashed border-neutral-800 bg-neutral-900/10 rounded-sm">
                <div className="text-center mb-6">
                    <Settings className="w-8 h-8 text-neutral-700 mx-auto mb-2" />
-                   <h4 className="text-sm font-bold text-white uppercase tracking-wide">User Preferences</h4>
+                   <h4 className="text-sm font-bold text-white uppercase tracking-wide">{t('common.userPreferences', 'User Preferences')}</h4>
                </div>
                
                <div className="space-y-3">
@@ -299,7 +317,7 @@ const Dashboard: React.FC = () => {
                        onClick={toggleTheme}
                        className="w-full flex items-center justify-between px-4 py-3 border border-neutral-800 bg-black hover:bg-neutral-900 transition-colors group"
                    >
-                       <span className="text-xs font-mono text-neutral-400 uppercase group-hover:text-white">Interface Theme</span>
+                       <span className="text-xs font-mono text-neutral-400 uppercase group-hover:text-white">{t('common.interfaceTheme', 'Interface Theme')}</span>
                        <div className="flex items-center gap-2">
                            <Sun className={`w-3 h-3 ${theme === 'light' ? 'text-yellow-500' : 'text-neutral-600'}`} />
                            
@@ -316,7 +334,7 @@ const Dashboard: React.FC = () => {
                        className="w-full flex items-center justify-center gap-2 px-4 py-3 border border-red-900/30 bg-red-950/10 hover:bg-red-950/30 transition-colors text-red-500"
                    >
                        <LogOut className="w-3 h-3" />
-                       <span className="text-xs font-bold uppercase tracking-widest">Sign Out</span>
+                       <span className="text-xs font-bold uppercase tracking-widest">{t('common.signOut', 'Sign Out')}</span>
                    </button>
                </div>
             </div>

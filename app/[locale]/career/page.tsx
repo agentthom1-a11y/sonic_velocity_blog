@@ -1,41 +1,44 @@
-'use client';
-
 import { ArrowLeft, ArrowRight, ChevronRight } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale } from '@/lib/i18n-config';
 
-export default function CareerPage() {
+export default async function CareerPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
+
   return (
     <div className="max-w-5xl mx-auto px-6 pt-32 pb-20 animate-[fadeIn_0.5s_ease-out] text-neutral-300">
       <Link href="/" className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest mb-12 hover:text-white transition-colors">
-        <ArrowLeft className="w-4 h-4" /> Return to Base
+        <ArrowLeft className="w-4 h-4" /> {dict.common.returnToBase}
       </Link>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-16 mb-20">
           <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 border border-green-900/30 bg-green-950/10 rounded-full mb-6">
                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-green-400">Hiring Active</span>
+                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-green-400">{dict.common.hiringActive}</span>
               </div>
               <h1 className="text-5xl font-black text-white uppercase tracking-tighter mb-6 leading-none">
-                  Join The <br/> Neural Network
+                  {dict.common.joinNeuralNetwork}
               </h1>
               <p className="font-mono text-sm text-neutral-400 leading-relaxed mb-8">
-                  We are looking for misfits, audio hackers, and full-stack wizards who want to disrupt the music industry. If you live at the intersection of Code and Culture, we want you.
+                  {dict.common.careerPitch}
               </p>
               <a href="mailto:careers@velocity.ai" className="inline-flex items-center gap-3 px-6 py-3 bg-white text-black font-bold uppercase tracking-widest text-xs hover:bg-neutral-200 transition-colors">
-                  Send Resume <ArrowRight className="w-4 h-4" />
+                  {dict.common.sendResume} <ArrowRight className="w-4 h-4" />
               </a>
           </div>
           
           <div className="border border-neutral-800 bg-neutral-900/20 p-8 relative">
               <div className="absolute -top-3 -right-3 w-24 h-24 bg-neutral-800/50 blur-2xl rounded-full"></div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-6 relative z-10">Why Join Velocity?</h3>
+              <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-6 relative z-10">{dict.common.whyJoin}</h3>
               <ul className="space-y-4 relative z-10">
                   {[
-                      "Remote-First Protocol (Work from anywhere)",
-                      "Competitive Credits & Equity",
-                      "Unlimited GPU Compute Access",
-                      "Annual 'Rave Retreat' in Bali"
+                      dict.common.benefit1,
+                      dict.common.benefit2,
+                      dict.common.benefit3,
+                      dict.common.benefit4
                   ].map((benefit, i) => (
                       <li key={i} className="flex items-center gap-3 font-mono text-xs text-neutral-400">
                           <CheckCircle className="w-4 h-4 text-neutral-600" />
@@ -47,13 +50,13 @@ export default function CareerPage() {
       </div>
 
       <div className="border-t border-neutral-800 pt-12">
-          <h2 className="text-sm font-mono text-neutral-500 uppercase tracking-[0.3em] mb-8">Open Positions</h2>
+          <h2 className="text-sm font-mono text-neutral-500 uppercase tracking-[0.3em] mb-8">{dict.common.openPositions}</h2>
           <div className="grid grid-cols-1 gap-4">
               {[
-                  { role: "Senior Audio Synthesis Engineer", type: "Engineering", loc: "Remote / Jakarta" },
-                  { role: "Fullstack Developer (Next.js + WebGL)", type: "Product", loc: "Remote" },
-                  { role: "Growth Hacker (Dangdut Specialist)", type: "Marketing", loc: "Surabaya / Hybrid" },
-                  { role: "AI Model Trainer (Rhythm Focus)", type: "R&D", loc: "Remote" }
+                  { role: dict.common.role1 || "Senior Audio Synthesis Engineer", type: "Engineering", loc: "Remote / Jakarta" },
+                  { role: dict.common.role2 || "Fullstack Developer (Next.js + WebGL)", type: "Product", loc: "Remote" },
+                  { role: dict.common.role3 || "Growth Hacker (Dangdut Specialist)", type: "Marketing", loc: "Surabaya / Hybrid" },
+                  { role: dict.common.role4 || "AI Model Trainer (Rhythm Focus)", type: "R&D", loc: "Remote" }
               ].map((job, i) => (
                   <div key={i} className="group flex items-center justify-between p-6 border border-neutral-800 bg-black hover:bg-neutral-900 transition-colors cursor-pointer">
                       <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">

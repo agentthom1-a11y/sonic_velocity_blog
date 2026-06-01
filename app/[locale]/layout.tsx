@@ -174,7 +174,7 @@ export default async function RootLayout({
                 {children}
               </main>
 
-              <Footer locale={locale} />
+              <Footer dict={dict} locale={locale} />
               <AIProducerBotWrapper />
             </div>
           </PreloaderWrapper>

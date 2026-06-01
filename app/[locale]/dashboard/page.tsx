@@ -1,21 +1,10 @@
-'use client';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale } from '@/lib/i18n-config';
+import DashboardClient from './DashboardClient';
 
-import Dashboard from "@/components/Dashboard";
-import { useAppContext } from "@/components/AppContext";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+export default async function DashboardPage({ params }: { params: Promise<{ locale: Locale }> }) {
+  const { locale } = await params;
+  const dict = await getDictionary(locale);
 
-export default function DashboardPage() {
-  const { isLoggedIn } = useAppContext();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push('/');
-    }
-  }, [isLoggedIn, router]);
-
-  if (!isLoggedIn) return null;
-
-  return <Dashboard />;
+  return <DashboardClient dict={dict} />;
 }

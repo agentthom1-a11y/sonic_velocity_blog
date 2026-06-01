@@ -77,13 +77,13 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                   href="/studio"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Generate
+                  {dict.common.studio}
                 </Link>
                 <Link 
                   href="/showcase"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Systems
+                  {dict.common.systems}
                 </Link>
               </>
             ) : (
@@ -117,7 +117,7 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                   href="/models"
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/models') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
-                  Models
+                  {dict.common.models}
                 </Link>
               </>
             )}
@@ -184,16 +184,28 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
               className="fixed inset-0 top-0 bg-black z-[40] flex flex-col pt-32 px-10"
             >
               <div className="space-y-8 overflow-y-auto max-h-[60vh] py-4">
-                {(isLoggedIn ? ['Dashboard', 'Generate', 'Systems'] : [SITE_CONFIG.publicationTitle, 'Systems', 'Studio', 'Access', 'Login']).map((item) => {
-                   const slug = item === SITE_CONFIG.publicationTitle ? '/' : `/${item.toLowerCase() === 'generate' ? 'studio' : item.toLowerCase() === 'access' ? 'pricing' : item.toLowerCase()}`;
+                {(isLoggedIn 
+                  ? [
+                      { label: dict.common.dashboard, slug: '/dashboard' },
+                      { label: dict.common.studio, slug: '/studio' },
+                      { label: dict.common.systems, slug: '/showcase' }
+                    ] 
+                  : [
+                      { label: dict.common.transmissions, slug: '/' },
+                      { label: dict.common.systems, slug: '/showcase' },
+                      { label: dict.common.studio, slug: '/studio' },
+                      { label: dict.common.access, slug: '/pricing' },
+                      { label: dict.common.login, slug: '/login' }
+                    ]
+                ).map((item) => {
                    return (
                     <Link 
-                      key={item}
-                      href={slug}
+                      key={item.slug}
+                      href={item.slug}
                       onClick={() => setIsMenuOpen(false)}
                       className="block w-full text-left text-4xl font-black italic uppercase tracking-tighter text-neutral-700 hover:text-white transition-all hover:translate-x-4 active:translate-x-2"
                     >
-                      {item}
+                      {item.label}
                     </Link>
                   );
                 })}

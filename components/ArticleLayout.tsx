@@ -2,6 +2,8 @@ import React from 'react';
 import { Schema } from './Schema';
 import { Link } from './Link';
 import { ChevronRight } from 'lucide-react';
+import { getDictionary } from '@/lib/get-dictionary';
+import { Locale } from '@/lib/i18n-config';
 
 interface FAQ {
   question: string;
@@ -24,7 +26,7 @@ interface ArticleLayoutProps {
   relatedReading: { title: string; href: string; description: string }[];
 }
 
-export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
+export async function ArticleLayout({
   title,
   description,
   date,
@@ -38,7 +40,9 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
   sonicVelocityInsight,
   faqs,
   relatedReading,
-}) => {
+}: ArticleLayoutProps) {
+  const dict = await getDictionary(locale as Locale);
+
   const breadcrumbSchema = {
     '@type': 'BreadcrumbList',
     itemListElement: breadcrumbs.map((b, i) => ({
@@ -80,7 +84,7 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
 
       <div className="max-w-4xl mx-auto">
         <nav className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-widest text-neutral-500 mb-12 flex-wrap">
-          <Link href={`/`} className="hover:text-white transition-colors">Home</Link>
+          <Link href={`/`} className="hover:text-white transition-colors">{dict.common.home}</Link>
           {breadcrumbs.map((b, i) => (
             <React.Fragment key={i}>
               <ChevronRight className="w-3 h-3" />
@@ -100,14 +104,14 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
 
         <div className="space-y-20">
           <section id="quick-answer" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Quick Answer</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.quickAnswer}</h2>
             <div className="text-lg md:text-xl text-neutral-300 font-medium leading-relaxed bg-neutral-950 p-8 border border-neutral-900">
               {quickAnswer}
             </div>
           </section>
 
           <section id="key-signals" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Key Signals</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.keySignals}</h2>
             <ul className="space-y-4">
               {keySignals.map((signal, i) => (
                 <li key={i} className="flex gap-4 items-start text-neutral-300 font-mono text-sm leading-relaxed">
@@ -119,21 +123,21 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
           </section>
 
           <section id="why-it-matters" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Why It Matters</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.whyItMatters}</h2>
             <div className="prose prose-invert prose-neutral max-w-none prose-p:font-mono prose-p:text-sm prose-p:leading-loose">
               {whyItMatters}
             </div>
           </section>
 
           <section id="trend-breakdown" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Trend Breakdown</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.trendBreakdown}</h2>
             <div className="prose prose-invert prose-neutral max-w-none prose-p:font-mono prose-p:text-sm prose-p:leading-loose prose-h3:font-black prose-h3:uppercase prose-h3:tracking-tight prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4">
               {trendBreakdown}
             </div>
           </section>
 
           <section id="data-signals" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Data or Signals to Watch</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.dataSignalsToWatch}</h2>
             <div className="overflow-x-auto border border-neutral-900 rounded-sm">
               <table className="w-full text-left font-mono text-xs md:text-sm whitespace-nowrap md:whitespace-normal">
                 <thead className="bg-neutral-950 uppercase text-[10px] tracking-widest text-neutral-500">
@@ -157,14 +161,14 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
           </section>
 
           <section id="sonic-velocity-insight" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">Sonic Velocity Insight</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.sonicVelocityInsight}</h2>
             <div className="bg-neutral-900/50 p-8 md:p-10 border-l-4 border-white font-mono text-sm leading-loose">
               {sonicVelocityInsight}
             </div>
           </section>
 
           <section id="faq" className="scroll-mt-32">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">FAQ</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-6 border-b border-neutral-900 pb-2">{dict.common.faq}</h2>
             <div className="space-y-6">
               {faqs.map((faq, i) => (
                 <div key={i} className="border border-neutral-900 p-6 bg-neutral-950">
@@ -176,7 +180,7 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
           </section>
 
           <section id="related" className="scroll-mt-32 pt-12 border-t border-neutral-900">
-            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-8">Related Reading</h2>
+            <h2 className="text-[11px] font-black font-mono uppercase tracking-[0.4em] text-neutral-500 mb-8">{dict.common.relatedReading}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {relatedReading.map((link, i) => (
                 <Link key={i} href={link.href} className="block group p-6 border border-neutral-900 hover:bg-neutral-950 transition-colors">
@@ -190,4 +194,4 @@ export const ArticleLayout: React.FC<ArticleLayoutProps> = ({
       </div>
     </article>
   );
-};
+}

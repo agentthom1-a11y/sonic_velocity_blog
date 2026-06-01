@@ -7,7 +7,7 @@ import {
   Twitter, Facebook, Linkedin, Copy, CheckCircle2, Share2,
   ArrowRight, Terminal, ShoppingBag, ArrowUp
 } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/components/Link';
 import { useParams, useRouter } from 'next/navigation';
 import { BLOG_POSTS, SITE_CONFIG } from '@/blogData';
 import { BlogPost } from '@/types';

@@ -7,7 +7,21 @@ import { PRESETS, PresetType, MixingSettings, StemSettings, RemixSettings } from
 import { Visualizer } from './Visualizer';
 import { useAppContext } from './AppContext';
 
-const GeneratorForm: React.FC = () => {
+const GeneratorForm: React.FC<{ dict?: any }> = ({ dict }) => {
+  const t = (key: string, fallback: string) => {
+    if (!dict) return fallback;
+    const parts = key.split('.');
+    let cur = dict;
+    for (const part of parts) {
+      if (cur && cur[part] !== undefined) {
+        cur = cur[part];
+      } else {
+        return fallback;
+      }
+    }
+    return cur || fallback;
+  };
+
   const { userTier, handleCreateJob } = useAppContext();
 
   const router = useRouter();
@@ -75,13 +89,13 @@ const GeneratorForm: React.FC = () => {
          }));
          setIsAnalyzingRemix(false);
      }, 2000);
-  };
+   };
 
   const clearRemixFile = (e: React.MouseEvent) => {
-      e.stopPropagation();
-      setRemixFile(null);
-      setRemixSettings(prev => ({...prev, referenceTrack: undefined}));
-  };
+       e.stopPropagation();
+       setRemixFile(null);
+       setRemixSettings(prev => ({...prev, referenceTrack: undefined}));
+   };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -169,21 +183,21 @@ const GeneratorForm: React.FC = () => {
           <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
              <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest flex items-center gap-2">
                 {userTier === 'free' ? <Lock className="w-3 h-3 text-neutral-600" /> : <Settings className="w-3 h-3 text-green-500" />}
-                00 // Advanced Modules ({userTier === 'free' ? 'Pro' : userTier})
+                00 // {t('common.advancedModules', 'Advanced Modules')} ({userTier === 'free' ? 'Pro' : userTier})
              </label>
              {userTier === 'free' ? (
-                <span className="text-[9px] font-mono text-red-900 bg-red-950/30 border border-red-900/50 px-1.5 py-0.5 rounded-sm uppercase">Restricted</span>
+                <span className="text-[9px] font-mono text-red-900 bg-red-950/30 border border-red-900/50 px-1.5 py-0.5 rounded-sm uppercase">{t('common.restricted', 'Restricted')}</span>
              ) : (
-                <span className="text-[9px] font-mono text-green-500 bg-green-900/20 border border-green-900/50 px-1.5 py-0.5 rounded-sm uppercase">Unlocked</span>
+                <span className="text-[9px] font-mono text-green-500 bg-green-900/20 border border-green-900/50 px-1.5 py-0.5 rounded-sm uppercase">{t('common.unlocked', 'Unlocked')}</span>
              )}
           </div>
           
           <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${userTier === 'free' ? 'opacity-50 pointer-events-none filter grayscale' : ''}`}>
              {[
-                { id: 'lyrics', label: 'Lyrics Engine', icon: Mic, subtitle: "Vocal Synthesis" },
-                { id: 'advanced', label: 'Pro Controls', icon: Settings, subtitle: "Mixing & FX Engine" },
-                { id: 'cover', label: 'Cover Mode', icon: Layers, subtitle: "Stem Separation" },
-                { id: 'remix', label: 'Remix Engine', icon: Repeat, subtitle: "Auto-Beatmatch (Dev)" }
+                { id: 'lyrics', label: t('common.lyricsEngine', 'Lyrics Engine'), icon: Mic, subtitle: t('common.vocalSynthesis', 'Vocal Synthesis') },
+                { id: 'advanced', label: t('common.proControls', 'Pro Controls'), icon: Settings, subtitle: t('common.mixingFxEngine', 'Mixing & FX Engine') },
+                { id: 'cover', label: t('common.coverMode', 'Cover Mode'), icon: Layers, subtitle: t('common.stemSeparation', 'Stem Separation') },
+                { id: 'remix', label: t('common.remixEngine', 'Remix Engine'), icon: Repeat, subtitle: t('common.autoBeatmatch', 'Auto-Beatmatch (Dev)') }
              ].map((feature) => {
                 const unlocked = isUnlocked(feature.id);
                 const active = activeModules[feature.id];
@@ -228,7 +242,7 @@ const GeneratorForm: React.FC = () => {
                       </div>
                   </div>
                 </div>
-             )})}
+              )})}
           </div>
 
           {/* Module-specific UI (simplified for brevity, identical logic to original) */}
@@ -273,13 +287,13 @@ const GeneratorForm: React.FC = () => {
               <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center">
                  <div className="relative bg-black/80 backdrop-blur-sm border border-neutral-800 p-6 md:p-8 shadow-2xl max-w-sm mx-auto">
                     <Lock className="w-6 h-6 text-white mb-4 mx-auto" />
-                    <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-2">Studio Locked</h3>
+                    <h3 className="text-lg font-bold text-white uppercase tracking-wider mb-2">{t('common.studioLocked', 'Studio Locked')}</h3>
                     <button 
                        type="button"
                        onClick={onUpgrade}
                        className="w-full py-3 bg-white text-black text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-neutral-200 transition-colors"
                     >
-                       Unlock Pro Studio
+                       {t('common.unlockProStudio', 'Unlock Pro Studio')}
                     </button>
                  </div>
               </div>
@@ -289,7 +303,7 @@ const GeneratorForm: React.FC = () => {
         {/* Preset Selection */}
         <div className="space-y-4">
           <div className="flex items-center justify-between border-b border-neutral-800 pb-2">
-            <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">01 // Select Genre Preset</label>
+            <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">01 // {t('common.selectGenrePreset', 'Select Genre Preset')}</label>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-0 border border-neutral-800 bg-neutral-900/50">
             {PRESETS.map((p) => (
@@ -309,7 +323,7 @@ const GeneratorForm: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
-              <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">02 // Input Prompt</label>
+              <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">02 // {t('common.inputPrompt', 'Input Prompt')}</label>
               <input
                 type="text"
                 value={topic}
@@ -320,7 +334,7 @@ const GeneratorForm: React.FC = () => {
               />
             </div>
             <div className="space-y-4">
-              <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">03 // Atmosphere</label>
+              <label className="font-mono text-xs text-neutral-500 uppercase tracking-widest">03 // {t('common.atmosphere', 'Atmosphere')}</label>
               <input
                 type="text"
                 value={mood}
@@ -336,7 +350,7 @@ const GeneratorForm: React.FC = () => {
           disabled={isSubmitting || !topic}
           className="w-full py-5 bg-white text-black font-bold text-sm tracking-[0.2em] uppercase flex items-center justify-center gap-4 transition-all hover:bg-neutral-200 disabled:bg-neutral-900 disabled:text-neutral-600"
         >
-          {isSubmitting ? 'Processing Sequence...' : 'Initiate Synthesis'}
+          {isSubmitting ? t('common.processingSequence', 'Processing Sequence...') : t('common.initiateSynthesis', 'Initiate Synthesis')}
           <ArrowRight className="w-5 h-5" />
         </button>
       </form>

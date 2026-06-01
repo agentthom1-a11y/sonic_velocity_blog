@@ -6,10 +6,11 @@ import { Link } from './Link';
 import { SITE_CONFIG } from '../blogData';
 
 interface FooterProps {
+  dict: any;
   locale: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ locale }) => {
+export const Footer: React.FC<FooterProps> = ({ dict, locale }) => {
   return (
     <footer className="py-20 border-t border-neutral-900 bg-black relative z-10 w-full">
       <div className="max-w-7xl mx-auto px-6">
@@ -18,7 +19,7 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
             <div>
               <h4 className="text-sm font-black text-white uppercase tracking-widest mb-1">Sonic Velocity</h4>
               <p className="text-[10px] font-mono text-neutral-600 uppercase tracking-widest leading-loose">
-                AI Music Intelligence Platform
+                {dict.common.platformSub}
               </p>
             </div>
             <div className="flex gap-4">
@@ -35,28 +36,28 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
           </div>
 
           <div className="space-y-4 text-left">
-            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Platform</h5>
+            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">{dict.common.platform}</h5>
             <div className="flex flex-col gap-2">
-              <Link href={`/about`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">About Sonic Velocity</Link>
-              <Link href={`/models`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">AI Music Models</Link>
-              <Link href={`/blog`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">Blog</Link>
+              <Link href={`/about`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.about}</Link>
+              <Link href={`/models`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.models}</Link>
+              <Link href={`/blog`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.blog}</Link>
             </div>
           </div>
 
           <div className="space-y-4 text-left">
-            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Intelligence</h5>
+            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">{dict.common.intelligence}</h5>
             <div className="flex flex-col gap-2">
-              <Link href={`/music-trends/indonesia/2026`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">Indonesian Music Trends</Link>
-              <Link href={`/music-trends/asia/2026`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">Asian Music Trends</Link>
-              <Link href={`/song-trend-signals`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">Song Trend Signals</Link>
+              <Link href={`/music-trends/indonesia/2026`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.indonesianTrends}</Link>
+              <Link href={`/music-trends/asia/2026`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.asianTrends}</Link>
+              <Link href={`/song-trend-signals`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.songSignals}</Link>
             </div>
           </div>
 
           <div className="space-y-4 text-left">
-            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">Glossary</h5>
+            <h5 className="text-[10px] font-mono font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-900 pb-2">{dict.common.glossary}</h5>
             <div className="flex flex-col gap-2">
-              <Link href={`/glossary/ai-audio-synthesis`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">AI Audio Synthesis</Link>
-              <Link href={`/glossary/momentum-song`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">Momentum Songs</Link>
+              <Link href={`/glossary/ai-audio-synthesis`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.aiAudioSynthesis}</Link>
+              <Link href={`/glossary/momentum-song`} className="text-[10px] font-mono text-neutral-400 uppercase tracking-widest text-left hover:text-white transition-colors">{dict.common.momentumSongs}</Link>
             </div>
           </div>
         </div>
@@ -65,7 +66,7 @@ export const Footer: React.FC<FooterProps> = ({ locale }) => {
           <span>OPERATIONAL_STATUS: OPTIMAL</span>
           <span>SONIC VELOCITY © 2026. ALL RIGHTS RESERVED.</span>
           <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="flex items-center gap-2 hover:text-white transition-colors">
-            Return To Top <ArrowUpRight className="w-3 h-3" />
+            {dict.common.returnToTop} <ArrowUpRight className="w-3 h-3" />
           </button>
         </div>
       </div>
