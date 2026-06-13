@@ -32,40 +32,72 @@ export const AIProducerBot: React.FC = () => {
     scrollToBottom();
   }, [messages, isOpen, isMinimized]);
 
-  const handleSend = (e?: React.FormEvent) => {
+  const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isTyping) return;
 
     const userMsg: Message = { id: Date.now().toString(), sender: 'user', text: input, timestamp: Date.now() };
-    setMessages(prev => [...prev, userMsg]);
+    const currentMessages = [...messages, userMsg];
+    setMessages(currentMessages);
     setInput('');
     setIsTyping(true);
 
-    // Simulate AI Processing
-    setTimeout(() => {
-        const botMsg = getBotResponse(input);
-        setMessages(prev => [...prev, botMsg]);
-        setIsTyping(false);
-    }, 1000 + Math.random() * 1000);
-  };
+    try {
+      // According to user curl: content: [{ type: "text", text: "..." }]
+      const formattedApiMessages = currentMessages.map(m => ({
+          role: m.sender === 'bot' ? 'assistant' : 'user',
+          content: [
+              {
+                  type: "text",
+                  text: m.text
+              }
+          ]
+      }));
 
-  const getBotResponse = (query: string): Message => {
-      const lower = query.toLowerCase();
-      let response = "Syntax Error: Input parameters unclear. Please refine prompt.";
+      formattedApiMessages.unshift({
+        role: 'system',
+        content: [
+            {
+                type: 'text',
+                text: "You are VELOCITY_PILOT, an AI Producer Assistant for Sonic Velocity Platform. You assist users with music production, lyric generation, and trend analysis. Keep your answers concise, technical, and helpful."
+            }
+        ]
+      });
 
-      if (lower.includes('help')) {
-          response = "List of Directives:\n> /analyze_trends : Scan active viral vectors\n> /generate_lyrics : Initiate vocal synthesis text\n> /mixing_tips : Optimization protocols";
-      } else if (lower.includes('analyze') || lower.includes('trend')) {
-          response = "SCANNING DATA STREAMS...\n[||||||||||] 100%\n\nTarget Detected: 'Breakbeat Kota'\nKey: A Minor\nBPM: 145\nViral Coefficient: 98.2%";
-      } else if (lower.includes('lyrics') || lower.includes('write')) {
-          response = "Lyric Module Active. Suggested hook:\n'Malam ini kita goyang'\n'Sampai pagi jangan pulang'";
-      } else if (lower.includes('master') || lower.includes('mix')) {
-          response = "Optimization Suggestion: Boost 60Hz by +2dB for 'Jedag Jedug' kick impact. Apply sidechain compression at ratio 4:1.";
-      } else if (lower.includes('hello') || lower.includes('hi')) {
-          response = "Greetings, Operator. Ready to synthesize.";
+      const response = await fetch('/api/chat/minimax', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: formattedApiMessages })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch from MiniMax API');
       }
 
-      return { id: Date.now().toString(), sender: 'bot', text: response, timestamp: Date.now() };
+      const data = await response.json();
+      let botResponseText = "No response received.";
+      
+      // Support string or content array
+      const contentField = data.choices?.[0]?.message?.content;
+      if (typeof contentField === 'string') {
+        botResponseText = contentField;
+      } else if (Array.isArray(contentField)) {
+        botResponseText = contentField.map((c: any) => c.text).join('\n');
+      } else if (data.reply) {
+        // Fallback for some MiniMax endpoint variants that use .reply directly
+        botResponseText = data.reply;
+      }
+
+      const botMsg: Message = { id: Date.now().toString(), sender: 'bot', text: botResponseText, timestamp: Date.now() };
+      setMessages(prev => [...prev, botMsg]);
+
+    } catch (error) {
+      console.error("AI Bot Error:", error);
+      const errorMsg: Message = { id: Date.now().toString(), sender: 'bot', text: "ERROR: Failed to connect to AI Core. Please verify MINIMAX_API_KEY.", timestamp: Date.now() };
+      setMessages(prev => [...prev, errorMsg]);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   // Quick Actions

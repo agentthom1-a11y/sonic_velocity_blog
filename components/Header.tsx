@@ -85,6 +85,12 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                 >
                   {dict.common.systems}
                 </Link>
+                <Link 
+                  href="/playground"
+                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                >
+                  {dict.common.playground}
+                </Link>
               </>
             ) : (
               // PUBLIC MENU
@@ -100,6 +106,12 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                   className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.systems}
+                </Link>
+                <Link 
+                  href="/playground"
+                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                >
+                  {dict.common.playground}
                 </Link>
                 <Link 
                   href="/studio"
@@ -188,11 +200,13 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
                   ? [
                       { label: dict.common.dashboard, slug: '/dashboard' },
                       { label: dict.common.studio, slug: '/studio' },
-                      { label: dict.common.systems, slug: '/showcase' }
+                      { label: dict.common.systems, slug: '/showcase' },
+                      { label: dict.common.playground, slug: '/playground' }
                     ] 
                   : [
                       { label: dict.common.transmissions, slug: '/' },
                       { label: dict.common.systems, slug: '/showcase' },
+                      { label: dict.common.playground, slug: '/playground' },
                       { label: dict.common.studio, slug: '/studio' },
                       { label: dict.common.access, slug: '/pricing' },
                       { label: dict.common.login, slug: '/login' }
