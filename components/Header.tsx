@@ -63,31 +63,31 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
         </Link>
 
         {/* Center Navigation - Desktop */}
-        <nav className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+        <nav className="hidden lg:flex flex-1 justify-center items-center gap-4 xl:gap-8 mx-4">
             {isLoggedIn ? (
               // LOGGED IN MENU
               <>
                 <Link 
                   href="/dashboard"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/dashboard') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/dashboard') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.dashboard}
                 </Link>
                 <Link 
                   href="/studio"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.studio}
                 </Link>
                 <Link 
                   href="/showcase"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.systems}
                 </Link>
                 <Link 
                   href="/playground"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.playground}
                 </Link>
@@ -97,37 +97,37 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
               <>
                 <Link 
                   href="/"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.transmissions}
                 </Link>
                 <Link 
                   href="/showcase"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/showcase') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.systems}
                 </Link>
                 <Link 
                   href="/playground"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/playground') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.playground}
                 </Link>
                 <Link 
                   href="/studio"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/studio') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.studio}
                 </Link>
                 <Link 
                   href="/pricing"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/pricing') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/pricing') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.access}
                 </Link>
                 <Link 
                   href="/models"
-                  className={`text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/models') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                  className={`text-[9px] xl:text-[10px] font-mono uppercase tracking-[0.2em] transition-colors ${isActive('/models') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
                 >
                   {dict.common.models}
                 </Link>
@@ -136,7 +136,7 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
         </nav>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-4 md:gap-6 z-50">
+        <div className="flex items-center gap-3 md:gap-4 lg:gap-6 z-50">
           <button 
             onClick={toggleMinimalism}
             className={`flex items-center justify-center w-8 h-8 rounded-full border transition-all ${
@@ -154,14 +154,14 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
             <>
               <Link 
                 href="/login"
-                className={`hidden md:block text-[10px] font-mono uppercase tracking-widest transition-colors ${isActive('/login') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
+                className={`hidden lg:block text-[9px] xl:text-[10px] font-mono uppercase tracking-widest transition-colors ${isActive('/login') ? 'text-white' : 'text-neutral-500 hover:text-white'}`}
               >
                 {dict.common.login}
               </Link>
               
               <Link 
                 href="/studio"
-                className="group flex items-center gap-2 px-6 py-2.5 bg-white text-black text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-200 transition-all sm:flex hidden"
+                className="group flex items-center gap-2 px-4 py-2 bg-white text-black text-[9px] xl:text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-200 transition-all sm:flex hidden shrink-0 whitespace-nowrap"
               >
                 {dict.common.getStarted}
                 <ChevronRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
@@ -170,7 +170,7 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
           ) : (
             <Link 
               href="/dashboard"
-              className="group flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 text-white text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition-all"
+              className="group flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 text-white text-[9px] xl:text-[10px] font-bold uppercase tracking-widest hover:bg-neutral-800 transition-all shrink-0 whitespace-nowrap"
             >
               <LayoutDashboard className="w-3 h-3 text-neutral-400 group-hover:text-white" />
               <span className="hidden sm:inline">{dict.common.console}</span>
@@ -180,7 +180,7 @@ const Header: React.FC<HeaderProps> = ({ dict }) => {
           {/* Mobile Menu Icon */}
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-white w-10 h-10 flex items-center justify-center border border-neutral-900 bg-black/50"
+            className="lg:hidden text-white w-10 h-10 flex items-center justify-center border border-neutral-900 bg-black/50 shrink-0"
           >
             {isMenuOpen ? <ChevronRight className="w-6 h-6 rotate-90" /> : <Menu className="w-6 h-6" />}
           </button>

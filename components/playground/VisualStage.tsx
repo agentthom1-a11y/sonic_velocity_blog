@@ -22,6 +22,15 @@ interface Particle {
   color: string;
 }
 
+interface Ripple {
+  x: number;
+  y: number;
+  radius: number;
+  maxRadius: number;
+  life: number;
+  color: string;
+}
+
 export const VisualStage: React.FC<VisualStageProps> = ({
   preset,
   sampleAudio,
@@ -32,6 +41,7 @@ export const VisualStage: React.FC<VisualStageProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animIdRef = useRef<number>(0);
   const particlesRef = useRef<Particle[]>([]);
+  const ripplesRef = useRef<Ripple[]>([]);
   const timeRef = useRef(0);
   const smoothBeatRef = useRef(0);
   const prevBeatRef = useRef(0);
@@ -489,6 +499,23 @@ export const VisualStage: React.FC<VisualStageProps> = ({
       ctx.fillStyle = cursorGlow;
       ctx.fillRect(0, 0, W, H);
 
+      // Draw and update ripples
+      for (let i = ripplesRef.current.length - 1; i >= 0; i--) {
+        const r = ripplesRef.current[i];
+        r.radius += 5 + (p.tempo * 10);
+        r.life -= 0.02;
+        if (r.life <= 0 || r.radius >= r.maxRadius) {
+          ripplesRef.current.splice(i, 1);
+          continue;
+        }
+        
+        ctx.beginPath();
+        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = hexToRgba(r.color, r.life * 0.8);
+        ctx.lineWidth = 1 + r.life * 5;
+        ctx.stroke();
+      }
+
       animIdRef.current = requestAnimationFrame(draw);
     };
 
@@ -500,11 +527,42 @@ export const VisualStage: React.FC<VisualStageProps> = ({
     };
   }, [generateSyntheticSignal]);
 
+  const handleClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    // Spawn ripple
+    ripplesRef.current.push({
+      x,
+      y,
+      radius: 0,
+      maxRadius: 150 + Math.random() * 300,
+      life: 1.0,
+      color: presetRef.current.colorPrimary
+    });
+
+    // Spawn explosive particles
+    for (let i = 0; i < 20; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 5 + Math.random() * 15;
+        particlesRef.current.push({
+          x,
+          y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          life: 1.0,
+          size: 2 + Math.random() * 4,
+          color: Math.random() > 0.5 ? presetRef.current.colorPrimary : presetRef.current.colorSecondary
+        });
+    }
+  }, []);
+
   // Status overlay text
   const statusLabel = inputMode === 'IDLE' ? 'SYNTHETIC_SIGNAL' : inputMode === 'MIC' ? 'MIC_ACTIVE' : inputMode === 'AUDIO' ? 'AUDIO_PLAYING' : 'CAMERA_ACTIVE';
 
   return (
-    <div className="relative w-full h-full bg-[#030303] overflow-hidden">
+    <div className="relative w-full h-full bg-[#030303] overflow-hidden cursor-crosshair" onClick={handleClick}>
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
 
       {/* Status badge */}
